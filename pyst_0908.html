@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>파이썬 산술 및 비교 연산자 학습</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Palette: Warm Neutrals for a calming learning environment -->
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #FDFBF8;
+            color: #4A4A4A;
+        }
+        .code-block {
+            background-color: #2D3748;
+            color: #E2E8F0;
+            font-family: 'D2Coding', 'Courier New', monospace;
+            white-space: pre-wrap;
+            border-radius: 0.5rem;
+        }
+        .output-block {
+            background-color: #F7FAFC;
+            border-left: 4px solid #4299E1;
+            font-family: 'D2Coding', 'Courier New', monospace;
+            white-space: pre-wrap;
+            border-radius: 0.5rem;
+        }
+        .section-header {
+            border-bottom: 2px solid #E0E0E0;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-[#8D6E63]">Python 연산자 학습</h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#arithmetic" class="text-gray-600 hover:text-[#C0A080] transition duration-300">산술 연산자</a>
+                <a href="#comparison" class="text-gray-600 hover:text-[#C0A080] transition duration-300">비교 연산자</a>
+                <a href="#challenges" class="text-gray-600 hover:text-[#C0A080] transition duration-300">학생 도전 과제</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <section class="text-center mb-16">
+            <h2 class="text-4xl font-bold mb-4 text-[#6D4C41]">파이썬 연산자 마스터하기</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">일상적인 계산부터 데이터 분석까지, 파이썬의 연산자가 어떻게 작동하는지 대화형 예제를 통해 직접 확인해보세요.</p>
+        </section>
+
+        <section id="arithmetic" class="mb-20 scroll-mt-20">
+            <h3 class="text-3xl font-bold text-center mb-12 text-[#6D4C41] section-header pb-4">산술 연산자 (Arithmetic Operators)</h3>
+            <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">수학 계산에 사용되는 연산자들입니다. 덧셈, 뺄셈, 곱셈, 나눗셈 등 익숙한 연산부터 몫과 나머지를 구하는 연산까지 살펴봅니다.</p>
+
+            <!-- Arithmetic Operator Examples -->
+            <div id="arithmetic-examples" class="space-y-12">
+                <!-- Addition Example -->
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">+ (덧셈)</h4>
+                    <p class="text-gray-600 mb-4">두 수를 더하거나 문자열을 연결합니다.</p>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <div class="code-block p-4">print(10 + 5)
+print("Hello" + " World")</div>
+                            <button class="run-btn mt-4 w-full bg-[#8D6E63] text-white py-2 px-4 rounded-md hover:bg-[#6D4C41] transition duration-300" data-example-id="arithmetic-add">실행하기</button>
+                        </div>
+                        <div>
+                            <div id="output-arithmetic-add" class="output-block p-4 h-24 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subtraction, Multiplication, Division Example -->
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">- (뺄셈), * (곱셈), / (나눗셈)</h4>
+                    <p class="text-gray-600 mb-4">기본적인 사칙연산입니다. 나눗셈(/)은 항상 소수점 결과가 나옵니다.</p>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <div class="code-block p-4">print(10 - 3)
+print(4 * 5)
+print(20 / 4)</div>
+                            <button class="run-btn mt-4 w-full bg-[#8D6E63] text-white py-2 px-4 rounded-md hover:bg-[#6D4C41] transition duration-300" data-example-id="arithmetic-basic">실행하기</button>
+                        </div>
+                        <div>
+                            <div id="output-arithmetic-basic" class="output-block p-4 h-32 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Floor Division & Modulo Example -->
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]>// (몫), % (나머지)</h4>
+                    <p class="text-gray-600 mb-4">두 수를 나눈 정수 몫(Floor Division)과 나머지를 구합니다.</p>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <div class="code-block p-4">print(10 // 3)
+print(10 % 3)</div>
+                            <button class="run-btn mt-4 w-full bg-[#8D6E63] text-white py-2 px-4 rounded-md hover:bg-[#6D4C41] transition duration-300" data-example-id="arithmetic-floor">실행하기</button>
+                        </div>
+                        <div>
+                            <div id="output-arithmetic-floor" class="output-block p-4 h-24 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exponentiation Example -->
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]>** (거듭제곱)</h4>
+                    <p class="text-gray-600 mb-4">수를 거듭제곱합니다.</p>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <div class="code-block p-4">print(2 ** 3)</div>
+                            <button class="run-btn mt-4 w-full bg-[#8D6E63] text-white py-2 px-4 rounded-md hover:bg-[#6D4C41] transition duration-300" data-example-id="arithmetic-exp">실행하기</button>
+                        </div>
+                        <div>
+                            <div id="output-arithmetic-exp" class="output-block p-4 h-24 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="comparison" class="mb-20 scroll-mt-20">
+            <h3 class="text-3xl font-bold text-center mb-12 text-[#6D4C41] section-header pb-4">비교 연산자 (Comparison Operators)</h3>
+            <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">두 값의 관계를 비교하여 참(True) 또는 거짓(False)을 반환합니다. 이 결과는 조건문에서 매우 중요하게 사용됩니다.</p>
+
+            <!-- Comparison Operator Examples -->
+            <div id="comparison-examples" class="space-y-12">
+                <!-- Equality & Inequality Example -->
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]>== (같음), != (같지 않음)</h4>
+                    <p class="text-gray-600 mb-4">두 값이 같은지 또는 다른지 비교합니다.</p>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <div class="code-block p-4">print(10 == 10)
+print(10 != 5)
+print("apple" == "Apple")</div>
+                            <button class="run-btn mt-4 w-full bg-[#8D6E63] text-white py-2 px-4 rounded-md hover:bg-[#6D4C41] transition duration-300" data-example-id="comparison-equality">실행하기</button>
+                        </div>
+                        <div>
+                            <div id="output-comparison-equality" class="output-block p-4 h-32 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Greater/Less Than Example -->
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]>> (초과), < (미만), >= (이상), <= (이하)</h4>
+                    <p class="text-gray-600 mb-4">값의 크기를 비교합니다.</p>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <div class="code-block p-4">print(10 > 5)
+print(10 < 5)
+print(10 >= 10)
+print(5 <= 5)</div>
+                            <button class="run-btn mt-4 w-full bg-[#8D6E63] text-white py-2 px-4 rounded-md hover:bg-[#6D4C41] transition duration-300" data-example-id="comparison-gtlt">실행하기</button>
+                        </div>
+                        <div>
+                            <div id="output-comparison-gtlt" class="output-block p-4 h-32 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- New Section for Student Challenges -->
+        <section id="challenges" class="mb-20 scroll-mt-20">
+            <h3 class="text-3xl font-bold text-center mb-12 text-[#6D4C41] section-header pb-4">학생 도전 과제: 직접 작성하고 실행하기</h3>
+            <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">아래 코드는 웹페이지에서 직접 실행되지 않습니다. 파이썬 IDLE나 에디터에 직접 복사하여 입력 값을 넣고 결과를 확인해 보세요!</p>
+
+             <!-- Random Addition Program -->
+             <div class="bg-white p-8 rounded-lg shadow-lg mb-12">
+                 <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">1. 랜덤 덧셈 프로그램</h4>
+                 <p class="text-gray-600 mb-4">두 개의 무작위 숫자를 더하는 간단한 문제입니다. 답을 입력하고 맞는지 확인해 보세요.</p>
+                 <div class="code-block p-4">
+# 이 프로그램은 파이썬 IDLE 또는 에디터에서 실행해야 합니다.
+# -----------------------------------------------
+import random
+
+num1 = random.randint(1, 20)
+num2 = random.randint(1, 20)
+
+answer = int(input(f"{num1} + {num2} = "))
+
+if answer == num1 + num2:
+    print("정답입니다!")
+else:
+    print("틀렸습니다. 정답은", num1 + num2, "입니다.")
+
+# -----------------------------------------------
+                 </div>
+            </div>
+
+            <!-- Grade Calculator -->
+             <div class="bg-white p-8 rounded-lg shadow-lg mb-12">
+                 <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">2. 짝수/홀수 판별기</h4>
+                 <p class="text-gray-600 mb-4">숫자를 입력받아 짝수인지 홀수인지 판별합니다. `%`(나머지 연산자)를 활용합니다.</p>
+                 <div class="code-block p-4">
+# 이 프로그램은 파이썬 IDLE 또는 에디터에서 실행해야 합니다.
+# -----------------------------------------------
+number = int(input("정수를 입력하세요: "))
+
+if number % 2 == 0:
+    print(f"{number}는 짝수입니다.")
+else:
+    print(f"{number}는 홀수입니다.")
+# -----------------------------------------------
+                 </div>
+            </div>
+
+            <!-- Turtle Drawing Example -->
+             <div class="bg-white p-8 rounded-lg shadow-lg">
+                 <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">3. 함수를 활용하여 모양 그리기</h4>
+                 <p class="text-gray-600 mb-4">함수를 정의하고, 인자를 바꿔가며 터틀의 색과 각도를 조절하여 원하는 모양을 그려보세요.</p>
+                 <div class="code-block p-4">
+# 이 프로그램은 파이썬 IDLE 또는 에디터에서 실행해야 합니다.
+# -----------------------------------------------
+import turtle
+
+# 터틀 객체 생성
+t = turtle.Turtle()
+t.shape("turtle")
+t.speed(1)
+t.pensize(3)
+
+# 터틀의 색과 방향을 바꾸며 이동시키는 함수 정의
+def draw_line(length, angle, color):
+    t.color(color)
+    t.right(angle)
+    t.fd(length)
+
+# 함수를 여러 번 호출하여 사각형 그리기
+print("터틀이 색을 바꾸며 사각형을 그립니다.")
+draw_line(100, 90, "red")
+draw_line(100, 90, "green")
+draw_line(100, 90, "blue")
+draw_line(100, 90, "purple")
+
+turtle.done()
+# -----------------------------------------------
+                 </div>
+            </div>
+        </section>
+        
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-20">
+        <div class="container mx-auto px-6 py-4 text-center">
+            <p>&copy; 2025 Python Interactive Learning Guide. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const runButtons = document.querySelectorAll('.run-btn');
+
+            const outputs = {
+                'arithmetic-add': '15\nHello World',
+                'arithmetic-basic': '7\n20\n5.0',
+                'arithmetic-floor': '3\n1',
+                'arithmetic-exp': '8',
+                'comparison-equality': 'True\nTrue\nFalse',
+                'comparison-gtlt': 'True\nFalse\nTrue\nTrue'
+            };
+
+            runButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const exampleId = button.dataset.exampleId;
+                    const outputEl = document.getElementById(`output-${exampleId}`);
+                    
+                    outputEl.textContent = outputs[exampleId];
+                    outputEl.classList.remove('text-gray-500', 'justify-center');
+                    outputEl.style.whiteSpace = 'pre-wrap';
+                    outputEl.style.alignItems = 'flex-start';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
