@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>파이썬 지역 변수와 전역 변수 학습 가이드</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: 본 애플리케이션은 기존의 선형적인 슬라이드 구조를 탈피하여, 사용자가 능동적으로 학습할 수 있는 대화형 단일 페이지 앱(SPA)으로 설계되었습니다. 상단 고정 내비게이션을 통해 '핵심 개념', '대화형 예제', '시각적 비교', 'AI 코드 분석', 'AI 비주얼라이저', '핵심 요약' 섹션으로 자유롭게 이동할 수 있습니다. '대화형 예제' 섹션에서는 사용자가 직접 '실행' 버튼을 눌러 코드 결과를 확인하고 설명을 탐색하는 동적인 학습 경험을 제공합니다. 이는 정적 정보 전달보다 높은 참여도와 이해도를 유도하기 위함입니다. 'AI 코드 분석'과 'AI 비주얼라이저' 섹션은 Gemini API를 활용하여 사용자가 직접 코드를 분석하거나 개념을 시각화할 수 있게 해 학습의 깊이와 흥미를 더합니다. 마지막으로, Chart.js를 활용한 '시각적 비교'는 변수의 범위를 직관적으로 이해시키는 데 도움을 줍니다. 이 구조는 사용자의 학습 흐름을 존중하면서도 깊이 있는 이해를 돕기 위해 선택되었습니다. -->
+    <!-- Visualization & Content Choices: 
+        - 슬라이드 1 (핵심 개념): 목표(정보 전달) -> 표현(카드형 UI) -> 상호작용(없음) -> 정당성(개념을 명확하고 간결하게 분리하여 제시).
+        - 슬라이드 2, 3, 4 (예제): 목표(개념 비교 및 이해) -> 표현(대화형 코드 실행기) -> 상호작용('실행' 버튼 클릭 시 결과 및 설명 표시) -> 정당성(사용자의 능동적 참여를 통해 학습 효과 증대).
+        - 슬라이드 5 (요약): 목표(지식 강화 및 시각적 비교) -> 표현(Chart.js 막대그래프 및 요약 목록) -> 상호작용(차트 호버 시 툴팁 표시) -> 정당성(변수 '범위'라는 추상적 개념을 시각화하여 직관적 이해를 돕고, 핵심 규칙을 명확히 정리).
+        - 신규 섹션 (AI 코드 분석): 목표(사용자 코드 분석을 통한 맞춤형 학습) -> 표현(텍스트 입력, Gemini Text API 호출) -> 상호작용(코드 입력 후 버튼 클릭으로 분석 결과 표시) -> 정당성(AI 기반의 즉각적인 코드 분석으로 실용적 지식 습득을 도움).
+        - 신규 섹션 (AI 비주얼라이저): 목표(추상적 개념을 이미지로 시각화) -> 표현(텍스트 입력, Gemini Image API 호출, 이미지 표시) -> 상호작용(개념 입력 후 버튼 클릭으로 이미지 생성) -> 정당성(생성 AI를 활용하여 개념을 시각적으로 형상화함으로써 기억력과 이해력 증진).
+        - 라이브러리: Chart.js (Canvas 렌더링), Gemini API.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #FDFBF8;
+            color: #4A4A4A;
+        }
+        .code-block {
+            background-color: #2D3748;
+            color: #E2E8F0;
+            font-family: 'D2Coding', 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+        .output-block {
+            background-color: #F7FAFC;
+            border-left: 4px solid #4299E1;
+            font-family: 'D2Coding', 'Courier New', monospace;
+        }
+        .explanation-block {
+            background-color: #FEFCE8;
+            border-left: 4px solid #FBBF24;
+        }
+        .nav-link {
+            transition: color 0.3s, border-color 0.3s;
+        }
+        .nav-link:hover {
+            color: #C0A080;
+            border-bottom-color: #C0A080;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+        .loader-spinner {
+            border-top-color: #C0A080;
+        }
+        .button-loader {
+            border-top-color: #fff;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-[#8D6E63]">Python 변수 범위 학습</h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#concepts" class="text-gray-600 border-b-2 border-transparent nav-link">핵심 개념</a>
+                <a href="#examples" class="text-gray-600 border-b-2 border-transparent nav-link">대화형 예제</a>
+                <a href="#comparison" class="text-gray-600 border-b-2 border-transparent nav-link">시각적 비교</a>
+                <a href="#analyzer" class="text-gray-600 border-b-2 border-transparent nav-link">AI 코드 분석</a>
+                <a href="#visualizer" class="text-gray-600 border-b-2 border-transparent nav-link">AI 비주얼라이저</a>
+                <a href="#summary" class="text-gray-600 border-b-2 border-transparent nav-link">핵심 요약</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <section class="text-center mb-20">
+            <h2 class="text-4xl font-bold mb-4 text-[#6D4C41]">파이썬 지역 변수와 전역 변수</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">코드가 실행되는 위치에 따라 변수의 '수명'과 '활동 범위'가 어떻게 달라지는지 대화형 예제를 통해 쉽고 재미있게 배워보세요.</p>
+        </section>
+
+        <section id="concepts" class="mb-20 scroll-mt-20">
+            <h3 class="text-3xl font-bold text-center mb-12 text-[#6D4C41]">핵심 개념 알아보기</h3>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-[#A1887F]">
+                    <h4 class="text-xl font-bold mb-2">📦 변수 (Variable)</h4>
+                    <p>데이터를 저장하는 메모리 공간에 붙인 이름입니다. 값을 저장하고 필요할 때마다 꺼내 쓸 수 있는 상자와 같습니다.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-[#C0A080]">
+                    <h4 class="text-xl font-bold mb-2">🏠 지역 변수 (Local Variable)</h4>
+                    <p>특정 함수 **안**에서만 사용할 수 있는 변수입니다. 함수가 호출될 때 만들어지고, 함수 실행이 끝나면 사라지는 '임시 작업자'와 같습니다.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-[#8D6E63]">
+                    <h4 class="text-xl font-bold mb-2">🌍 전역 변수 (Global Variable)</h4>
+                    <p>프로그램 코드 **전체**에서 접근할 수 있는 변수입니다. 프로그램이 시작될 때 만들어져서 끝날 때까지 유지되는 '공용 데이터'입니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="examples" class="mb-20 scroll-mt-20">
+            <h3 class="text-3xl font-bold text-center mb-12 text-[#6D4C41]">대화형 예제로 개념 익히기</h3>
+            <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">'실행' 버튼을 눌러 각 코드의 결과를 직접 확인하고, 숨겨진 설명을 통해 원리를 파악해보세요.</p>
+
+            <!-- Example 1 -->
+            <div class="bg-white p-8 rounded-lg shadow-lg mb-12">
+                <h4 class="text-2xl font-semibold mb-4 text-[#8D6E63]">예제 1: 지역 변수와 전역 변수의 기본 차이</h4>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="font-medium mb-2">코드</p>
+                        <div class="code-block p-4 rounded-md text-sm">x = 10  <span class="text-gray-400"># 전역 변수 x</span>
+
+def my_function():
+    x = 5   <span class="text-gray-400"># 지역 변수 x</span>
+    print("함수 내부:", x)
+
+my_function()
+print("함수 외부:", x)</div>
+                        <button class="run-btn mt-4 w-full bg-[#8D6E63] text-white py-2 px-4 rounded-md hover:bg-[#6D4C41] transition duration-300" data-example="1">▶ 실행하기</button>
+                    </div>
+                    <div>
+                        <p class="font-medium mb-2">결과</p>
+                        <div id="output-1" class="output-block p-4 rounded-md h-32 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                        <div id="explanation-1" class="explanation-block p-4 rounded-md mt-4 hidden">
+                            <h5 class="font-bold">설명</h5>
+                            <p>함수 안에서 선언된 `x = 5`는 새로운 **지역 변수**를 생성합니다. 이 변수는 함수 밖의 **전역 변수** `x = 10`에 아무런 영향을 주지 않습니다. 따라서 각자의 공간에서 다른 값을 가집니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Example 2 -->
+            <div class="bg-white p-8 rounded-lg shadow-lg mb-12">
+                <h4 class="text-2xl font-semibold mb-4 text-[#8D6E63]">예제 2: `global` 키워드로 전역 변수 수정하기</h4>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="font-medium mb-2">코드</p>
+                        <div class="code-block p-4 rounded-md text-sm">y = 20  <span class="text-gray-400"># 전역 변수 y</span>
+
+def change_global_variable():
+    global y  <span class="text-gray-400"># 전역 변수 y를 사용하겠다고 선언</span>
+    y = 30    <span class="text-gray-400"># 전역 변수 y의 값을 변경</span>
+    print("함수 내부:", y)
+
+change_global_variable()
+print("함수 외부:", y)</div>
+                        <button class="run-btn mt-4 w-full bg-[#8D6E63] text-white py-2 px-4 rounded-md hover:bg-[#6D4C41] transition duration-300" data-example="2">▶ 실행하기</button>
+                    </div>
+                    <div>
+                        <p class="font-medium mb-2">결과</p>
+                        <div id="output-2" class="output-block p-4 rounded-md h-32 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                        <div id="explanation-2" class="explanation-block p-4 rounded-md mt-4 hidden">
+                            <h5 class="font-bold">설명</h5>
+                            <p>`global y` 선언은 "지금부터 사용하는 `y`는 지역 변수가 아니라 바깥에 있는 전역 변수 `y`를 가리키는 것입니다"라고 파이썬에 알려줍니다. 따라서 함수 안에서 `y`의 값을 변경하면 전역 변수의 값이 영구적으로 바뀝니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Example 3 -->
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <h4 class="text-2xl font-semibold mb-4 text-[#8D6E63]">예제 3: 전역 변수 읽기 (수정하지 않을 때)</h4>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="font-medium mb-2">코드</p>
+                        <div class="code-block p-4 rounded-md text-sm">z = 50  <span class="text-gray-400"># 전역 변수 z</span>
+
+def read_global_variable():
+    print("함수 내부:", z)  <span class="text-gray-400"># 전역 변수 z를 읽어옴</span>
+
+read_global_variable()
+print("함수 외부:", z)</div>
+                        <button class="run-btn mt-4 w-full bg-[#8D6E63] text-white py-2 px-4 rounded-md hover:bg-[#6D4C41] transition duration-300" data-example="3">▶ 실행하기</button>
+                    </div>
+                    <div>
+                        <p class="font-medium mb-2">결과</p>
+                        <div id="output-3" class="output-block p-4 rounded-md h-32 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                        <div id="explanation-3" class="explanation-block p-4 rounded-md mt-4 hidden">
+                            <h5 class="font-bold">설명</h5>
+                            <p>함수 안에서 전역 변수의 값을 **읽기만** 할 때는 `global` 키워드가 필요 없습니다. 파이썬은 해당 함수 내에 `z`라는 변수가 없으면 자동으로 바깥 범위(전역)에서 `z`를 찾아 사용합니다. 값을 **변경(할당)**할 때만 `global` 키워드가 필요합니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="comparison" class="mb-20 scroll-mt-20">
+            <h3 class="text-3xl font-bold text-center mb-4 text-[#6D4C41]">변수 범위 시각적으로 비교하기</h3>
+            <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">변수가 어느 공간에서 활동하는지 차트를 통해 한눈에 파악해보세요. 전역 변수는 프로그램 전체에 걸쳐 존재하지만, 지역 변수는 특정 함수의 울타리 안에서만 살아있습니다.</p>
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <div class="chart-container">
+                    <canvas id="scopeChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="analyzer" class="mb-20 scroll-mt-20">
+            <h3 class="text-3xl font-bold text-center mb-4 text-[#6D4C41]">✨ AI 코드 분석기</h3>
+            <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">직접 작성한 파이썬 코드를 붙여넣고, 변수의 범위에 대해 분석해 보세요.</p>
+            <div class="bg-white p-8 rounded-lg shadow-lg max-w-3xl mx-auto">
+                <textarea id="code-input" class="w-full h-48 p-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#C0A080] resize-none" placeholder="여기에 파이썬 코드를 붙여넣으세요. (예: def greet():&#10;  name = 'Alice'&#10;  print(name)&#10;greet())"></textarea>
+                <div class="flex justify-end mt-4">
+                    <button id="analyze-button" class="bg-[#8D6E63] text-white py-2 px-6 rounded-md hover:bg-[#6D4C41] transition duration-300 flex items-center">
+                        <span class="mr-2">✨</span> 코드 분석하기
+                    </button>
+                </div>
+                <div id="analysis-box" class="mt-8 p-6 bg-[#F7FAFC] rounded-md border-l-4 border-[#8D6E63] hidden relative">
+                    <div id="analysis-loader" class="absolute inset-0 flex items-center justify-center bg-[#F7FAFC]/80 hidden">
+                        <div class="loader-spinner w-8 h-8 border-4 rounded-full animate-spin"></div>
+                    </div>
+                    <div id="analysis-text" class="prose max-w-none text-gray-700"></div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="visualizer" class="mb-20 scroll-mt-20">
+            <h3 class="text-3xl font-bold text-center mb-4 text-[#6D4C41]">✨ AI 비주얼라이저</h3>
+            <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">추상적인 변수 범위 개념을 이미지로 만들어 보세요. 생성하고 싶은 장면을 묘사해 주세요.</p>
+            <div class="bg-white p-8 rounded-lg shadow-lg max-w-3xl mx-auto">
+                <input type="text" id="visualizer-input" class="w-full p-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#C0A080]" placeholder="묘사 (예: 전역 변수가 있는 거대한 집, 그 안에 작은 방들이 있는 지역 변수)">
+                <div class="flex justify-end mt-4">
+                    <button id="visualize-button" class="bg-[#8D6E63] text-white py-2 px-6 rounded-md hover:bg-[#6D4C41] transition duration-300 flex items-center">
+                        <span class="mr-2">✨</span> 이미지 생성하기
+                    </button>
+                </div>
+                <div id="visualizer-box" class="mt-8 relative hidden">
+                    <div id="visualizer-loader" class="absolute inset-0 flex items-center justify-center bg-[#FDFBF8]/80 hidden">
+                        <div class="loader-spinner w-8 h-8 border-4 rounded-full animate-spin"></div>
+                    </div>
+                    <img id="visualizer-image" class="w-full h-auto rounded-md shadow-md">
+                </div>
+            </div>
+        </section>
+
+        <section id="summary" class="scroll-mt-20">
+            <h3 class="text-3xl font-bold text-center mb-12 text-[#6D4C41]">핵심 요약 및 주의사항</h3>
+            <div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+                <ul class="space-y-4">
+                    <li class="flex items-start">
+                        <span class="text-green-500 mr-3 mt-1">✓</span>
+                        <p>함수 안에서 변수에 새로운 값을 할당하면, 기본적으로 **지역 변수**로 취급됩니다.</p>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-green-500 mr-3 mt-1">✓</span>
+                        <p>함수 안에서 **전역 변수**의 값을 **변경**하려면, 반드시 `global` 키워드를 먼저 선언해야 합니다.</p>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-yellow-500 mr-3 mt-1">⚠️</span>
+                        <p>`global` 키워드를 너무 자주 사용하면 코드의 흐름을 추적하기 어려워져 복잡성이 증가할 수 있습니다. 꼭 필요한 경우에만 신중하게 사용하는 것이 좋습니다.</p>
+                    </li>
+                     <li class="flex items-start">
+                        <span class="text-blue-500 mr-3 mt-1">💡</span>
+                        <p>함수에서 값을 반환(`return`)하고, 그 값을 전역 변수에 할당하는 방식이 `global` 키워드를 사용하는 것보다 더 명확하고 안전한 코드 구조를 만드는 경우가 많습니다.</p>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-20">
+        <div class="container mx-auto px-6 py-4 text-center">
+            <p>&copy; 2025 Python Interactive Learning Guide. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const runButtons = document.querySelectorAll('.run-btn');
+
+            const outputs = {
+                '1': '함수 내부: 5\n함수 외부: 10',
+                '2': '함수 내부: 30\n함수 외부: 30',
+                '3': '함수 내부: 50\n함수 외부: 50'
+            };
+
+            runButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const exampleId = button.dataset.example;
+                    const outputEl = document.getElementById(`output-${exampleId}`);
+                    const explanationEl = document.getElementById(`explanation-${exampleId}`);
+
+                    outputEl.textContent = outputs[exampleId];
+                    outputEl.classList.remove('text-gray-500', 'justify-center');
+                    outputEl.style.whiteSpace = 'pre-wrap';
+                    outputEl.style.alignItems = 'flex-start';
+
+                    explanationEl.classList.remove('hidden');
+                });
+            });
+
+            const navLinks = document.querySelectorAll('a[href^="#"]');
+            navLinks.forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            const ctx = document.getElementById('scopeChart').getContext('2d');
+            const scopeChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['프로그램 전체 (전역 공간)', 'my_function (함수 공간)'],
+                    datasets: [{
+                        label: '전역 변수',
+                        data: [100, 100],
+                        backgroundColor: 'rgba(141, 110, 99, 0.6)',
+                        borderColor: 'rgba(141, 110, 99, 1)',
+                        borderWidth: 1,
+                        barPercentage: 0.5,
+                    }, {
+                        label: '지역 변수',
+                        data: [0, 80],
+                        backgroundColor: 'rgba(192, 160, 128, 0.6)',
+                        borderColor: 'rgba(192, 160, 128, 1)',
+                        borderWidth: 1,
+                        barPercentage: 0.5,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            stacked: true,
+                            display: false,
+                        },
+                        y: {
+                            stacked: true,
+                            ticks: {
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.dataset.label === '전역 변수') {
+                                        return '전역 변수는 프로그램 어디서든 접근 가능합니다.';
+                                    }
+                                    if (context.dataset.label === '지역 변수' && context.raw > 0) {
+                                        return '지역 변수는 해당 함수 안에서만 유효합니다.';
+                                    }
+                                    return '';
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: '변수의 활동 범위 (Scope)',
+                            font: {
+                                size: 18
+                            },
+                            padding: {
+                                bottom: 20
+                            }
+                        }
+                    }
+                }
+            });
+            
+            const analyzeButton = document.getElementById('analyze-button');
+            const codeInput = document.getElementById('code-input');
+            const analysisBox = document.getElementById('analysis-box');
+            const analysisText = document.getElementById('analysis-text');
+            const analysisLoader = document.getElementById('analysis-loader');
+
+            const visualizeButton = document.getElementById('visualize-button');
+            const visualizerInput = document.getElementById('visualizer-input');
+            const visualizerBox = document.getElementById('visualizer-box');
+            const visualizerImage = document.getElementById('visualizer-image');
+            const visualizerLoader = document.getElementById('visualizer-loader');
+
+            async function fetchWithExponentialBackoff(fetcher) {
+                const maxRetries = 5;
+                const baseDelay = 1000;
+                for (let i = 0; i < maxRetries; i++) {
+                    try {
+                        const response = await fetcher();
+                        if (response.ok) {
+                            return response;
+                        } else {
+                            throw new Error(`Server responded with status: ${response.status}`);
+                        }
+                    } catch (error) {
+                        const delay = baseDelay * (2 ** i);
+                        await new Promise(res => setTimeout(res, delay));
+                        if (i === maxRetries - 1) throw error;
+                    }
+                }
+            }
+
+            analyzeButton.addEventListener('click', async () => {
+                const userCode = codeInput.value.trim();
+                if (!userCode) return;
+
+                analysisBox.classList.remove('hidden');
+                analysisLoader.classList.remove('hidden');
+                analysisText.textContent = '';
+
+                const systemPrompt = "You are a professional Python programming expert. Analyze the provided Python code snippet and explain the scope of each variable (local or global). Identify any potential issues related to scope and provide clear, concise explanations in Korean.";
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                const payload = {
+                    contents: [{ parts: [{ text: `Analyze the following Python code:\n\n\`\`\`python\n${userCode}\n\`\`\`` }] }],
+                    tools: [{ "google_search": {} }],
+                    systemInstruction: {
+                        parts: [{ text: systemPrompt }]
+                    },
+                };
+
+                try {
+                    const response = await fetchWithExponentialBackoff(() => 
+                        fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        })
+                    );
+                    const result = await response.json();
+                    const candidate = result.candidates?.[0];
+                    if (candidate && candidate.content?.parts?.[0]?.text) {
+                        analysisText.textContent = candidate.content.parts[0].text;
+                    } else {
+                        analysisText.textContent = '분석에 실패했습니다. 코드를 다시 확인해주세요.';
+                    }
+                } catch (error) {
+                    analysisText.textContent = '네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+                } finally {
+                    analysisLoader.classList.add('hidden');
+                }
+            });
+
+            visualizeButton.addEventListener('click', async () => {
+                const prompt = visualizerInput.value.trim();
+                if (!prompt) return;
+                
+                visualizerBox.classList.remove('hidden');
+                visualizerImage.style.display = 'none';
+                visualizerLoader.classList.remove('hidden');
+
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`;
+                const payload = { instances: [{ prompt: prompt }], parameters: { "sampleCount": 1 } };
+
+                try {
+                    const response = await fetchWithExponentialBackoff(() =>
+                        fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        })
+                    );
+                    const result = await response.json();
+                    if (result.predictions && result.predictions.length > 0 && result.predictions[0].bytesBase64Encoded) {
+                        const imageUrl = `data:image/png;base64,${result.predictions[0].bytesBase64Encoded}`;
+                        visualizerImage.src = imageUrl;
+                        visualizerImage.style.display = 'block';
+                    } else {
+                        visualizerImage.src = '';
+                        visualizerImage.alt = '이미지 생성에 실패했습니다.';
+                    }
+                } catch (error) {
+                    visualizerImage.src = '';
+                    visualizerImage.alt = '이미지 생성 중 오류가 발생했습니다.';
+                } finally {
+                    visualizerLoader.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
