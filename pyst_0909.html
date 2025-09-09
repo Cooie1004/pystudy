@@ -1,0 +1,281 @@
+
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python 배열(리스트) 학습</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Palette: Warm Neutrals for a calming learning environment -->
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #FDFBF8;
+            color: #4A4A4A;
+        }
+        .code-block {
+            background-color: #2D3748;
+            color: #E2E8F0;
+            font-family: 'D2Coding', 'Courier New', monospace;
+            white-space: pre-wrap;
+            border-radius: 0.5rem;
+        }
+        .output-block {
+            background-color: #F7FAFC;
+            border-left: 4px solid #4299E1;
+            font-family: 'D2Coding', 'Courier New', monospace;
+            white-space: pre-wrap;
+            border-radius: 0.5rem;
+        }
+        .section-header {
+            border-bottom: 2px solid #E0E0E0;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-[#8D6E63]">Python 리스트(배열) 학습</h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#intro" class="text-gray-600 hover:text-[#C0A080] transition duration-300">리스트란?</a>
+                <a href="#index" class="text-gray-600 hover:text-[#C0A080] transition duration-300">인덱스로 접근하기</a>
+                <a href="#functions" class="text-gray-600 hover:text-[#C0A080] transition duration-300">주요 함수</a>
+                <a href="#challenge" class="text-gray-600 hover:text-[#C0A080] transition duration-300">학생 도전 과제</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <section id="intro" class="text-center mb-16 scroll-mt-20">
+            <h2 class="text-4xl font-bold mb-4 text-[#6D4C41]">Python 리스트(배열)의 모든 것</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">하나의 변수에 여러 개의 값을 담고 싶을 때 사용하는 자료구조입니다.
+                다양한 종류의 데이터를 순서대로 저장하고 관리할 수 있습니다.</p>
+        </section>
+
+        <section id="index" class="mb-20 scroll-mt-20">
+            <h3 class="text-3xl font-bold text-center mb-12 text-[#6D4C41] section-header pb-4">인덱스로 데이터 접근하기</h3>
+            <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
+                리스트에 저장된 각 값은 고유한 위치 번호, 즉 **인덱스**를 가집니다.
+                인덱스는 **`0`**부터 시작하며, 인덱스를 이용해 원하는 위치의 데이터에 접근하거나 수정할 수 있습니다.
+            </p>
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">인덱스 사용 예제</h4>
+                    <p class="text-gray-600 mb-4">리스트 `fruits`에서 인덱스 `0`과 `3`의 값을 출력합니다.</p>
+                    <div class="code-block p-4 mb-4">fruits = ["사과", "바나나", "딸기", "포도"]
+print(fruits[0])
+print(fruits[3])</div>
+                    <button data-example-id="index-basic" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-index-basic" class="output-block p-4 mt-4 h-24 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">음수 인덱스 사용 예제</h4>
+                    <p class="text-gray-600 mb-4">음수 인덱스는 리스트의 뒤에서부터 접근합니다. `-1`은 마지막 원소입니다.</p>
+                    <div class="code-block p-4 mb-4">numbers = [10, 20, 30, 40]
+print(numbers[-1])
+print(numbers[-2])</div>
+                    <button data-example-id="index-negative" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-index-negative" class="output-block p-4 mt-4 h-24 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">len() 함수 사용 예제</h4>
+                    <p class="text-gray-600 mb-4">`len()` 함수는 리스트의 길이를 반환합니다.</p>
+                    <div class="code-block p-4 mb-4">my_list = ['a', 'b', 'c', 'd', 'e']
+print(len(my_list))</div>
+                    <button data-example-id="len-func-index" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-len-func-index" class="output-block p-4 mt-4 h-24 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">del 키워드 사용 예제</h4>
+                    <p class="text-gray-600 mb-4">`del` 키워드를 사용해 특정 인덱스의 요소를 삭제합니다.</p>
+                    <div class="code-block p-4 mb-4">my_list = ['사과', '바나나', '포도']
+del my_list[1]
+print(my_list)</div>
+                    <button data-example-id="del-keyword" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-del-keyword" class="output-block p-4 mt-4 h-24 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="functions" class="mb-20 scroll-mt-20">
+            <h3 class="text-3xl font-bold text-center mb-12 text-[#6D4C41] section-header pb-4">주요 함수와 예제</h3>
+            <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">리스트의 요소를 추가, 삭제하거나 정렬하는 등 다양한 작업을 도와주는 유용한 함수들입니다.</p>
+
+            <div class="grid md:grid-cols-2 gap-12">
+                <!-- len() 함수 -->
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">len() 함수</h4>
+                    <p class="text-gray-600 mb-4">리스트의 길이를 반환합니다.</p>
+                    <div class="code-block p-4 mb-4">fruits = ['사과', '바나나', '포도']
+print(len(fruits))</div>
+                    <button data-example-id="len-func" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-len-func" class="output-block p-4 mt-4 h-24 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+                <!-- append() 함수 -->
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">append(값) 함수</h4>
+                    <p class="text-gray-600 mb-4">리스트의 마지막에 값을 추가합니다.</p>
+                    <div class="code-block p-4 mb-4">fruits = ['사과', '바나나']
+fruits.append('딸기')
+print(fruits)</div>
+                    <button data-example-id="append-func" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-append-func" class="output-block p-4 mt-4 h-24 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+                <!-- sort() 함수 -->
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">sort() 함수</h4>
+                    <p class="text-gray-600 mb-4">리스트의 요소를 오름차순으로 정렬합니다.</p>
+                    <div class="code-block p-4 mb-4">numbers = [3, 1, 2]
+numbers.sort()
+print(numbers)</div>
+                    <button data-example-id="sort-func" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-sort-func" class="output-block p-4 mt-4 h-24 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+                <!-- reverse() 함수 -->
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">reverse() 함수</h4>
+                    <p class="text-gray-600 mb-4">리스트의 요소를 역순으로 정렬합니다.</p>
+                    <div class="code-block p-4 mb-4">numbers = [1, 2, 3]
+numbers.reverse()
+print(numbers)</div>
+                    <button data-example-id="reverse-func" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-reverse-func" class="output-block p-4 mt-4 h-24 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+                <!-- index() 함수 -->
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">index(값) 함수</h4>
+                    <p class="text-gray-600 mb-4">특정 요소가 처음 나타나는 인덱스를 반환합니다.</p>
+                    <div class="code-block p-4 mb-4">my_list = ['a', 'b', 'c', 'b']
+index_b = my_list.index('b')
+print(index_b)</div>
+                    <button data-example-id="index-func" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-index-func" class="output-block p-4 mt-4 h-24 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+                <!-- insert() 함수 -->
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">insert(인덱스, 값) 함수</h4>
+                    <p class="text-gray-600 mb-4">특정 인덱스에 값을 삽입합니다.</p>
+                    <div class="code-block p-4 mb-4">my_list = ["a", "c"]
+my_list.insert(1, "b")
+print(my_list)</div>
+                    <button data-example-id="insert-func" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-insert-func" class="output-block p-4 mt-4 h-24 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+                <!-- remove() 함수 -->
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">remove(값) 함수</h4>
+                    <p class="text-gray-600 mb-4">리스트에서 첫 번째로 발견된 값을 삭제합니다.</p>
+                    <div class="code-block p-4 mb-4">my_list = [1, 2, 3, 2]
+my_list.remove(2)
+print(my_list)</div>
+                    <button data-example-id="remove-func" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-remove-func" class="output-block p-4 mt-4 h-24 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+                <!-- pop() 함수 -->
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">pop() 함수</h4>
+                    <p class="text-gray-600 mb-4">특정 인덱스의 요소를 삭제하고 반환합니다. 인덱스 생략 시 마지막 요소가 삭제됩니다.</p>
+                    <div class="code-block p-4 mb-4">my_list = [10, 20, 30]
+item = my_list.pop(1)
+print(item)
+print(my_list)</div>
+                    <button data-example-id="pop-func" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-pop-func" class="output-block p-4 mt-4 h-24 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+                 <!-- count() 함수 -->
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">count(값) 함수</h4>
+                    <p class="text-gray-600 mb-4">리스트 내 특정 요소의 개수를 세어 반환합니다.</p>
+                    <div class="code-block p-4 mb-4">my_list = [1, 2, 2, 3]
+count_2 = my_list.count(2)
+print(count_2)</div>
+                    <button data-example-id="count-func" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-count-func" class="output-block p-4 mt-4 h-24 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="challenge" class="mb-20 scroll-mt-20">
+            <h3 class="text-3xl font-bold text-center mb-12 text-[#6D4C41] section-header pb-4">학생 도전 과제: 직접 실행하고 분석하기</h3>
+            <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
+                아래 코드를 실행해 보고, 리스트의 최종 상태를 분석해 보세요.
+                이 코드는 리스트의 요소를 삭제하고, 추가하고, 정렬하는 과정을 한 번에 보여줍니다.
+            </p>
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">성적 관리 프로그램</h4>
+                <div class="code-block p-4 mb-4">
+scores = [85, 92, 78, 92, 65]
+print("1. 초기 점수:", scores)
+
+# 78점 삭제하기
+scores.remove(78)
+print("2. 78점 삭제 후:", scores)
+
+# 100점 추가하기
+scores.append(100)
+print("3. 100점 추가 후:", scores)
+
+# 점수를 오름차순으로 정렬하기
+scores.sort()
+print("4. 점수 정렬 후:", scores)
+
+# 92점이 몇 개인지 세기
+count_92 = scores.count(92)
+print("5. 92점의 개수:", count_92)</div>
+                <button data-example-id="challenge" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                <div id="output-challenge" class="output-block p-4 mt-4 h-32 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-20">
+        <div class="container mx-auto px-6 py-4 text-center">
+            <p>&copy; 2025 Python Interactive Learning Guide. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const outputs = {
+                'index-basic': '사과\n포도',
+                'index-negative': '40\n30',
+                'del-keyword': "['사과', '포도']",
+                'challenge': '1. 초기 점수: [85, 92, 78, 92, 65]\n2. 78점 삭제 후: [85, 92, 92, 65]\n3. 100점 추가 후: [85, 92, 92, 65, 100]\n4. 점수 정렬 후: [65, 85, 92, 92, 100]\n5. 92점의 개수: 2',
+                // New function outputs
+                'len-func-index': '5',
+                'len-func': '3',
+                'append-func': "['사과', '바나나', '딸기']",
+                'sort-func': "[1, 2, 3]",
+                'reverse-func': "[3, 2, 1]",
+                'index-func': "1",
+                'insert-func': "['a', 'b', 'c']",
+                'remove-func': "[1, 3, 2]",
+                'pop-func': "20\n[10, 30]",
+                'count-func': "2"
+            };
+
+            const runButtons = document.querySelectorAll('.run-btn');
+            runButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const exampleId = button.dataset.exampleId;
+                    const outputEl = document.getElementById(`output-${exampleId}`);
+                    
+                    if (outputs[exampleId]) {
+                        outputEl.textContent = outputs[exampleId];
+                        outputEl.classList.remove('text-gray-500', 'justify-center');
+                        outputEl.style.whiteSpace = 'pre-wrap';
+                        outputEl.style.alignItems = 'flex-start';
+                    } else {
+                        outputEl.textContent = '결과를 찾을 수 없습니다.';
+                        outputEl.classList.add('text-gray-500', 'justify-center');
+                        outputEl.style.alignItems = 'center';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
