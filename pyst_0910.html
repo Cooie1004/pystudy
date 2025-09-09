@@ -51,33 +51,22 @@
     <main class="container mx-auto px-6 py-12">
         <section id="function-types" class="mb-16 scroll-mt-20">
             <h2 class="text-4xl font-bold mb-4 text-[#6D4C41] text-center">함수의 종류</h2>
-            <div class="bg-white p-8 rounded-lg shadow-lg">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead>
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">종류</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">설명</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">예시</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap font-semibold">내장 함수</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Python이 기본으로 제공하는 함수 (정의 없이 바로 사용 가능)</td>
-                            <td class="px-6 py-4 whitespace-nowrap">print(), input(), len(), max()</td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap font-semibold">외장 함수</td>
-                            <td class="px-6 py-4 whitespace-nowrap">import 명령어를 사용하여 라이브러리를 불러와야 사용할 수 있는 함수</td>
-                            <td class="px-6 py-4 whitespace-nowrap">random.randint(), turtle.forward()</td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap font-semibold">사용자 정의 함수</td>
-                            <td class="px-6 py-4 whitespace-nowrap">사용자가 필요에 따라 직접 만들어 사용하는 함수</td>
-                            <td class="px-6 py-4 whitespace-nowrap">def my_function():</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-2 text-[#8D6E63]">내장 함수</h3>
+                    <p class="text-gray-600 mb-2">Python이 기본으로 제공하는 함수로, 정의 없이 바로 사용 가능합니다.</p>
+                    <p class="font-mono text-sm text-gray-500">예시: print(), input(), len(), max()</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-2 text-[#8D6E63]">외장 함수</h3>
+                    <p class="text-gray-600 mb-2">`import` 명령어를 사용하여 라이브러리를 불러와야 사용할 수 있는 함수입니다.</p>
+                    <p class="font-mono text-sm text-gray-500">예시: random.randint(), turtle.forward()</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-2 text-[#8D6E63]">사용자 정의 함수</h3>
+                    <p class="text-gray-600 mb-2">사용자가 필요에 따라 직접 만들어 사용하는 함수입니다.</p>
+                    <p class="font-mono text-sm text-gray-500">예시: def my_function():</p>
+                </div>
             </div>
         </section>
 
@@ -97,7 +86,7 @@
             </p>
             <div class="grid md:grid-cols-2 gap-12 items-center">
                 <div class="bg-white p-8 rounded-lg shadow-lg">
-                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">`max()` 함수 예제</h4>
+                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">max() 함수 예제</h4>
                     <p class="text-gray-600 mb-4">`max()` 함수는 주어진 값들 중 가장 큰 값을 반환합니다.</p>
                     <div class="code-block p-4 mb-4">
 # 20, 300, 99 중 가장 큰 값 찾기
@@ -107,7 +96,7 @@ print(max(20, 300, 99))</div>
                     <div id="output-max-func" class="output-block p-4 mt-4 h-24 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
                 </div>
                 <div class="bg-white p-8 rounded-lg shadow-lg">
-                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">`len()` 함수 예제</h4>
+                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">len() 함수 예제</h4>
                     <p class="text-gray-600 mb-4">`len()` 함수는 문자열이나 리스트의 길이를 반환합니다.</p>
                     <div class="code-block p-4 mb-4">
 text = "Hello Python"
