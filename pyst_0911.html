@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python f-string 학습</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Palette: Warm Neutrals for a calming learning environment -->
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #FDFBF8;
+            color: #4A4A4A;
+        }
+        .code-block {
+            background-color: #2D3748;
+            color: #E2E8F0;
+            font-family: 'D2Coding', 'Courier New', monospace;
+            white-space: pre-wrap;
+            border-radius: 0.5rem;
+        }
+        .output-block {
+            background-color: #F7FAFC;
+            border-left: 4px solid #4299E1;
+            font-family: 'D2Coding', 'Courier New', monospace;
+            white-space: pre-wrap;
+            border-radius: 0.5rem;
+        }
+        .section-header {
+            border-bottom: 2px solid #E0E0E0;
+        }
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #C0A080;
+        }
+        .nav-link.active {
+            font-weight: bold;
+            color: #6D4C41;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-[#8D6E63]">Python f-string 학습</h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#concept-section" class="nav-link text-gray-600">개념</a>
+                <a href="#why-use-section" class="nav-link text-gray-600">사용 이유</a>
+                <a href="#applications-section" class="nav-link text-gray-600">다양한 활용법</a>
+                <a href="#game-section" class="nav-link text-gray-600">게임 능력치 분배</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <section id="concept-section" class="mb-16 scroll-mt-20">
+            <h2 class="text-4xl font-bold mb-4 text-[#6D4C41] text-center">f-string(Formatted String Literal) 개념 💡</h2>
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <p class="text-lg text-gray-600">
+                    f-string(Formatted String Literal)은 파이썬 3.6부터 도입된 문자열 포맷팅 방법 중 가장 간편하고 강력한 기능입니다. 문자열 앞에 `f` 또는 `F`를 붙이고, 중괄호 `{}` 안에 변수나 표현식을 직접 넣어주면 해당 값이 문자열 안에 삽입됩니다.
+                </p>
+            </div>
+        </section>
+
+        <section id="why-use-section" class="mb-16 scroll-mt-20">
+            <h2 class="text-4xl font-bold mb-4 text-[#6D4C41] text-center">왜 f-string을 사용해야 할까요?</h2>
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <p class="text-lg text-gray-600 mb-4">
+                    f-string 이전에는 `+` 연산자를 사용해 문자열을 이어붙이거나, `.format()` 메소드를 사용해야 했습니다. 하지만 이 방법들은 몇 가지 단점이 있었죠.
+                </p>
+                
+                <div class="mb-6">
+                    <h5 class="text-xl font-semibold mb-2 text-[#8D6E63]">`+` 연산자</h5>
+                    <p class="text-gray-600 mb-2">문자열이 아닌 다른 타입(예: 숫자)의 변수를 합칠 때 `str()` 함수로 일일이 변환해줘야 해서 번거롭고, 코드가 길고 가독성이 떨어집니다.</p>
+                    <div class="code-block p-4">
+age = 18
+print("제 나이는 " + str(age) + "살입니다.")</div>
+                </div>
+
+                <div class="mb-6">
+                    <h5 class="text-xl font-semibold mb-2 text-[#8D6E63]">`.format()` 메소드</h5>
+                    <p class="text-gray-600 mb-2">중괄호 `{}`의 순서를 맞춰야 하거나, 인덱스 번호를 명시해야 하는 번거로움이 있었습니다.</p>
+                    <div class="code-block p-4">
+age = 18
+print("제 나이는 {}살입니다.".format(age))</div>
+                </div>
+
+                <p class="text-lg text-gray-600 mt-6">f-string은 이런 불편함을 해결합니다. 코드가 훨씬 직관적이고 간결해져서, 실수를 줄이고 코드를 읽기 쉽게 만들어줍니다.</p>
+            </div>
+        </section>
+
+        <section id="applications-section" class="mb-16 scroll-mt-20">
+            <h2 class="text-4xl font-bold text-center mb-12 text-[#6D4C41] section-header pb-4">f-string의 다양한 활용법 ✨</h2>
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <div class="mb-6">
+                    <h5 class="text-xl font-semibold mb-2 text-[#8D6E63]">1. 변수 삽입</h5>
+                    <p class="text-gray-600 mb-2">가장 기본적인 사용법입니다.</p>
+                    <div class="code-block p-4 mb-2">
+name = "철수"
+score = 95
+print(f"학생 이름: {name}, 점수: {score}")</div>
+                    <button data-example-id="fstring-var" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-fstring-var" class="output-block p-4 mt-4 h-24 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+
+                <div class="mb-6">
+                    <h5 class="text-xl font-semibold mb-2 text-[#8D6E63]">2. 간단한 연산</h5>
+                    <p class="text-gray-600 mb-2">덧셈, 뺄셈, 곱셈 같은 간단한 수학 연산도 중괄호 안에서 바로 할 수 있습니다.</p>
+                    <div class="code-block p-4 mb-2">
+price = 1500
+count = 3
+print(f"총 가격은 {price * count}원입니다.")</div>
+                    <button data-example-id="fstring-ops" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-fstring-ops" class="output-block p-4 mt-4 h-24 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+
+                <div class="mb-6">
+                    <h5 class="text-xl font-semibold mb-2 text-[#8D6E63]">3. 함수 호출</h5>
+                    <p class="text-gray-600 mb-2">문자열을 다루는 `upper()` 함수나 다른 함수도 중괄호 안에 넣어 사용할 수 있습니다.</p>
+                    <div class="code-block p-4 mb-2">
+username = "admin"
+print(f"환영합니다, {username.upper()}님!")</div>
+                    <button data-example-id="fstring-func" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-fstring-func" class="output-block p-4 mt-4 h-24 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+
+                <div class="mb-6">
+                    <h5 class="text-xl font-semibold mb-2 text-[#8D6E63]">4. 조건 표현식 (삼항 연산자)</h5>
+                    <p class="text-gray-600 mb-2">간단한 if-else 문을 한 줄로 표현하는 조건 표현식도 f-string 안에서 사용할 수 있습니다.</p>
+                    <div class="code-block p-4 mb-2">
+score = 85
+grade = "합격" if score >= 60 else "불합격"
+print(f"점수: {score}점, 결과: {grade}")</div>
+                    <button data-example-id="fstring-cond" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-fstring-cond" class="output-block p-4 mt-4 h-24 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+
+                <div class="mb-6">
+                    <h5 class="text-xl font-semibold mb-2 text-[#8D6E63]">5. 정렬 및 포맷팅</h5>
+                    <p class="text-gray-600 mb-2">숫자나 문자열을 특정 너비에 맞춰 정렬하거나 소수점 자릿수를 조절하는 등 포맷팅도 가능합니다. `:` 뒤에 포맷 코드를 추가합니다.</p>
+                    <div class="code-block p-4 mb-2">
+name = "파이썬"
+pi = 3.141592
+print(f"이름: {name:<10}") # 10칸을 확보하고 왼쪽 정렬
+print(f"원의 넓이: {pi:.2f}") # 소수점 둘째 자리까지 표시</div>
+                    <button data-example-id="fstring-format" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-fstring-format" class="output-block p-4 mt-4 h-24 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="game-section" class="mb-20 scroll-mt-20">
+            <h3 class="text-3xl font-bold text-center mb-12 text-[#6D4C41] section-header pb-4">직접 해보기: 게임 캐릭터 능력치 분배</h3>
+            <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
+                아래 코드를 실행하고, 팝업 창에 나타나는 질문에 직접 답하며 게임 캐릭터의 능력치를 분배해 보세요.
+            </p>
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">능력치 분배 프로그램</h4>
+                <div class="code-block p-4 mb-4">
+stat_point = 10 # 기본으로 주어진 능력치 포인트
+
+strength = int(input("힘(Strength)에 몇 포인트를 투자하시겠습니까? (최대 10): "))
+stat_point = stat_point - strength
+if stat_point < 0:
+    print("포인트가 부족합니다. 다시 시작하세요!")
+elif stat_point == 0:
+    print("모든 포인트를 사용했습니다. 훌륭한 캐릭터네요!")
+else:
+    agility = int(input(f"남은 {stat_point} 포인트를 민첩(Agility)에 투자하시겠습니까?: "))
+    stat_point = stat_point - agility
+
+    if stat_point < 0:
+        print("포인트가 부족합니다. 다시 시작하세요!")
+    elif stat_point == 0:
+        print("모든 포인트를 사용했습니다. 훌륭한 캐릭터네요!")
+    else:
+        intelligence = int(input(f"마지막 남은 {stat_point} 포인트를 지능(Intelligence)에 투자하시겠습니까?: "))
+        stat_point = stat_point - intelligence
+
+        if stat_point < 0:
+            print("포인트가 부족합니다. 다시 시작하세요!")
+        else:
+            print("캐릭터 생성이 완료되었습니다!")
+            print(f"최종 능력치 - 힘: {strength}, 민첩: {agility}, 지능: {intelligence}")</div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-20">
+        <div class="container mx-auto px-6 py-4 text-center">
+            <p>&copy; 2025 Python Interactive Learning Guide. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const outputs = {
+                'fstring-var': '학생 이름: 철수, 점수: 95',
+                'fstring-ops': '총 가격은 4500원입니다.',
+                'fstring-func': '환영합니다, ADMIN님!',
+                'fstring-cond': '점수: 85점, 결과: 합격',
+                'fstring-format': '이름: 파이썬      \n원의 넓이: 3.14'
+            };
+
+            const runButtons = document.querySelectorAll('.run-btn');
+            runButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const exampleId = button.dataset.exampleId;
+                    const outputEl = document.getElementById(`output-${exampleId}`);
+                    
+                    if (outputs[exampleId]) {
+                        outputEl.textContent = outputs[exampleId];
+                        outputEl.classList.remove('text-gray-500', 'justify-center');
+                        outputEl.classList.add('justify-start');
+                        outputEl.style.whiteSpace = 'pre-wrap';
+                    } else {
+                        outputEl.textContent = '결과를 찾을 수 없습니다.';
+                        outputEl.classList.add('text-gray-500', 'justify-center');
+                        outputEl.style.whiteSpace = 'normal';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
