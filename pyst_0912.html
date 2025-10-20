@@ -196,7 +196,6 @@ for i in range(1, 6):
                     <div id="output-continue-example" class="output-block p-4 mt-4 h-40 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
                 </div>
                 
-                <!-- NEW SECTION ADDED HERE -->
                 <div class="mt-8 p-4 border rounded-lg bg-gray-50">
                     <h4 class="text-2xl font-semibold mb-2 text-[#8D6E63]">3. `break`와 `continue` 함께 사용 (실전 예제)</h4>
                     <p class="text-gray-600 mb-4">
@@ -216,20 +215,19 @@ for monster in monsters:
                     <button data-example-id="break-continue-combined" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
                     <div id="output-break-continue-combined" class="output-block p-4 mt-4 h-48 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
                 </div>
-                <!-- END NEW SECTION -->
-                
             </div>
         </section>
-        <!-- End New Section -->
+        <!-- End Control Flow Section -->
 
         <section id="exercise-section" class="mb-20 scroll-mt-20">
-            <h3 class="text-3xl font-bold text-center mb-12 text-[#6D4C41] section-header pb-4">직접 해보기: 중첩 `for` 반복문으로 구구단 출력하기</h3>
-            <!-- Existing content -->
-            <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
-                `for` 반복문을 중첩하여 2단부터 9단까지 구구단 전체를 출력하는 코드입니다. 코드를 실행하고 결과를 확인해 보세요.
-            </p>
-            <div class="bg-white p-8 rounded-lg shadow-lg">
-                <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">구구단 출력 코드</h4>
+            <h3 class="text-3xl font-bold text-center mb-12 text-[#6D4C41] section-header pb-4">직접 해보기</h3>
+            
+            <!-- Existing Gugudan Example -->
+            <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">중첩 `for` 반복문으로 구구단 출력하기</h4>
+                <p class="text-center text-gray-600 mb-4 max-w-2xl mx-auto">
+                    `for` 반복문을 중첩하여 2단부터 9단까지 구구단 전체를 출력하는 코드입니다. 코드를 실행하고 결과를 확인해 보세요.
+                </p>
                 <div class="code-block p-4 mb-4">
 for i in range(2, 10):  # 2단부터 9단까지 반복 (i는 단)
     for j in range(1, 10):  # 1부터 9까지 반복 (j는 곱하는 수)
@@ -239,6 +237,29 @@ for i in range(2, 10):  # 2단부터 9단까지 반복 (i는 단)
                 <button data-example-id="gugudan" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
                 <div id="output-gugudan" class="output-block p-4 mt-4 h-96 overflow-y-scroll flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
             </div>
+            
+            <!-- UPDATED ODD SUM EXAMPLE (WITHOUT BUTTON/OUTPUT) -->
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">사용자 입력 기반: 1부터 N까지의 홀수 합 계산</h4>
+                <p class="text-gray-600 mb-4">
+                    사용자로부터 숫자를 입력받아 1부터 그 숫자까지의 홀수만을 더하는 프로그램입니다. `for`문과 `if` 조건문을 함께 사용하여 해결하는 예시 코드입니다. 
+                    <strong class="text-red-600">(웹페이지에서 실행이 안됨으로 파이썬 프로그램에서 직접 실행해보세요.)</strong>
+                </p>
+                <div class="code-block p-4 mb-4">
+N = int(input("숫자를 입력하시오 : "))
+odd_sum = 0
+
+# 1부터 N까지 반복
+for i in range(1, N + 1):
+    # 홀수인지 확인 (나머지가 0이 아니면 홀수)
+    if i % 2 != 0:
+        odd_sum += i
+
+print(f"1부터 {N}까지의 홀수의 합: {odd_sum}")</div>
+                <!-- 실행 버튼 및 결과 표시는 input() 명령어 사용 요청으로 인해 제외됨 -->
+            </div>
+            <!-- END UPDATED ODD SUM EXAMPLE -->
+
         </section>
 
     </main>
@@ -251,20 +272,20 @@ for i in range(2, 10):  # 2단부터 9단까지 반복 (i는 단)
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Updated outputs object including new examples
+            // Outputs dictionary: key is data-example-id, value is the expected output string
             const outputs = {
                 'for-list': '제가 좋아하는 과일은 사과입니다.\n제가 좋아하는 과일은 바나나입니다.\n제가 좋아하는 과일은 딸기입니다.',
                 'for-range': '0번째 반복\n1번째 반복\n2번째 반복\n3번째 반복\n4번째 반복',
                 'while-basic': '현재 카운트: 0\n현재 카운트: 1\n현재 카운트: 2',
                 
-                // New outputs for comparison and control flow
                 'compare-for': '1\n2\n3\n4\n5',
                 'compare-while': '1\n2\n3\n4\n5',
-                'break-example': '현재 i: 1\n현재 i: 2\n현재 i: 3\n반복 중지!', // i=4일 때 break이므로 3까지만 출력됨
-                'continue-example': '현재 i: 1\n현재 i: 2\n(3은 건너뜀)\n현재 i: 4\n현재 i: 5', // i=3일 때 continue이므로 '현재 i: 3'은 건너뜀
-                'break-continue-combined': '슬라임 전투!\n고블린 전투!\n트랩! 피해만 입고 통과.\n오크 전투!\n보스 등장! 종료.', // NEW OUTPUT
+                'break-example': '현재 i: 1\n현재 i: 2\n현재 i: 3\n반복 중지!',
+                'continue-example': '현재 i: 1\n현재 i: 2\n(3은 건너뜀)\n현재 i: 4\n현재 i: 5',
+                'break-continue-combined': '슬라임 전투!\n고블린 전투!\n트랩! 피해만 입고 통과.\n오크 전투!\n보스 등장! 종료.',
                 
-                // Gugudan output remains the same
+                // odd-sum-example 은 input() 사용으로 인해 스크립트에서 제외됨.
+
                 'gugudan': 
                     '2 x 1 = 2\n2 x 2 = 4\n2 x 3 = 6\n2 x 4 = 8\n2 x 5 = 10\n2 x 6 = 12\n2 x 7 = 14\n2 x 8 = 16\n2 x 9 = 18\n----------------\n3 x 1 = 3\n3 x 2 = 6\n3 x 3 = 9\n3 x 4 = 12\n3 x 5 = 15\n3 x 6 = 18\n3 x 7 = 21\n3 x 8 = 24\n3 x 9 = 27\n----------------\n4 x 1 = 4\n4 x 2 = 8\n4 x 3 = 12\n4 x 4 = 16\n4 x 5 = 20\n4 x 6 = 24\n4 x 7 = 28\n4 x 8 = 32\n4 x 9 = 36\n----------------\n5 x 1 = 5\n5 x 2 = 10\n5 x 3 = 15\n5 x 4 = 20\n5 x 5 = 25\n5 x 6 = 30\n5 x 7 = 35\n5 x 8 = 40\n5 x 9 = 45\n----------------\n6 x 1 = 6\n6 x 2 = 12\n6 x 3 = 18\n6 x 4 = 24\n6 x 5 = 30\n6 x 6 = 36\n6 x 7 = 42\n6 x 8 = 48\n6 x 9 = 54\n----------------\n7 x 1 = 7\n7 x 2 = 14\n7 x 3 = 21\n7 x 4 = 28\n7 x 5 = 35\n7 x 6 = 42\n7 x 7 = 49\n7 x 8 = 56\n7 x 9 = 63\n----------------\n8 x 1 = 8\n8 x 2 = 16\n8 x 3 = 24\n8 x 4 = 32\n8 x 5 = 40\n8 x 6 = 48\n8 x 7 = 56\n8 x 8 = 64\n8 x 9 = 72\n----------------\n9 x 1 = 9\n9 x 2 = 18\n9 x 3 = 27\n9 x 4 = 36\n9 x 5 = 45\n9 x 6 = 54\n9 x 7 = 63\n9 x 8 = 72\n9 x 9 = 81\n----------------'
             };
