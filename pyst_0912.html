@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python 반복문 학습</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Palette: Warm Neutrals for a calming learning environment -->
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #FDFBF8;
+            color: #4A4A4A;
+        }
+        .code-block {
+            background-color: #2D3748;
+            color: #E2E8F0;
+            font-family: 'D2Coding', 'Courier New', monospace;
+            white-space: pre-wrap;
+            border-radius: 0.5rem;
+        }
+        .output-block {
+            background-color: #F7FAFC;
+            border-left: 4px solid #4299E1;
+            font-family: 'D2Coding', 'Courier New', monospace;
+            white-space: pre-wrap;
+            border-radius: 0.5rem;
+        }
+        .section-header {
+            border-bottom: 2px solid #E0E0E0;
+        }
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #C0A080;
+        }
+        .nav-link.active {
+            font-weight: bold;
+            color: #6D4C41;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-[#8D6E63]">Python 반복문 학습</h1>
+            <div class="hidden md:flex space-x-8 text-sm">
+                <a href="#concept-section" class="nav-link text-gray-600">개념</a>
+                <a href="#for-loop-section" class="nav-link text-gray-600">for문</a>
+                <a href="#while-loop-section" class="nav-link text-gray-600">while문</a>
+                <a href="#loop-compare-section" class="nav-link text-gray-600">비교</a>
+                <a href="#control-flow-section" class="nav-link text-gray-600">제어 (break/continue)</a>
+                <a href="#exercise-section" class="nav-link text-gray-600">직접 해보기</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <section id="concept-section" class="mb-16 scroll-mt-20">
+            <h2 class="text-4xl font-bold mb-4 text-[#6D4C41] text-center">반복문의 개념 🔄</h2>
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <p class="text-lg text-gray-600 mb-4">
+                    반복문(Loop)은 특정 코드 블록을 여러 번 실행해야 할 때 사용하는 프로그래밍 구조입니다. 반복문을 사용하면 코드를 효율적으로 줄이고 가독성을 높일 수 있습니다.
+                </p>
+                <p class="text-lg text-gray-600">
+                    반복문은 크게 **`for` 반복문**과 **`while` 반복문** 두 가지 종류가 있습니다.
+                </p>
+            </div>
+        </section>
+
+        <section id="for-loop-section" class="mb-16 scroll-mt-20">
+            <h2 class="text-4xl font-bold text-center mb-12 text-[#6D4C41] section-header pb-4">for 반복문 (For Loop)</h2>
+            <!-- Existing content -->
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <p class="text-lg text-gray-600 mb-4">
+                    `for` 반복문은 **정해진 횟수**만큼 반복하거나, 리스트나 튜플 같은 **반복 가능한(iterable) 객체**의 모든 요소를 하나씩 순회할 때 사용합니다.
+                </p>
+                <div class="mb-6">
+                    <h5 class="text-xl font-semibold mb-2 text-[#8D6E63]">기본 형식 (리스트 순회)</h5>
+                    <div class="code-block p-4 mb-2">
+fruits = ["사과", "바나나", "딸기"]
+for fruit in fruits:
+    print(f"제가 좋아하는 과일은 {fruit}입니다.")</div>
+                    <button data-example-id="for-list" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-for-list" class="output-block p-4 mt-4 h-24 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+
+                <div class="mb-6">
+                    <h5 class="text-xl font-semibold mb-2 text-[#8D6E63]">횟수 지정 (`range()` 함수 사용)</h5>
+                    <p class="text-gray-600 mb-2">특정 횟수만큼 반복하고 싶을 때는 `range()` 함수를 사용합니다. `range(5)`는 0부터 4까지의 숫자를 생성합니다.</p>
+                    <div class="code-block p-4 mb-2">
+# 5번 반복
+for i in range(5):
+    print(f"{i}번째 반복")</div>
+                    <button data-example-id="for-range" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-for-range" class="output-block p-4 mt-4 h-32 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="while-loop-section" class="mb-16 scroll-mt-20">
+            <h2 class="text-4xl font-bold text-center mb-12 text-[#6D4C41] section-header pb-4">while 반복문 (While Loop)</h2>
+            <!-- Existing content -->
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <p class="text-lg text-gray-600 mb-4">
+                    `while` 반복문은 **조건이 참(True)인 동안** 코드 블록을 계속 반복 실행합니다. 반복 횟수가 불명확하거나 특정 조건이 충족될 때까지 실행해야 할 때 유용합니다.
+                </p>
+                <div class="mb-6">
+                    <h5 class="text-xl font-semibold mb-2 text-[#8D6E63]">기본 형식 (조건이 참일 때까지)</h5>
+                    <div class="code-block p-4 mb-2">
+count = 0
+while count < 3:
+    print(f"현재 카운트: {count}")
+    count = count + 1  # count를 증가시켜야 무한 루프에 빠지지 않습니다.</div>
+                    <button data-example-id="while-basic" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-while-basic" class="output-block p-4 mt-4 h-32 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Section: Loop Comparison -->
+        <section id="loop-compare-section" class="mb-16 scroll-mt-20">
+            <h2 class="text-4xl font-bold text-center mb-12 text-[#6D4C41] section-header pb-4">for문과 while문 비교 (1부터 5까지 출력)</h2>
+            <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
+                두 반복문은 서로 다른 구조를 가집니다. **횟수가 명확**할 때는 `for`문이, **조건이 명확**할 때는 `while`문이 더 효율적입니다.
+            </p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- FOR Loop Example -->
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">for문으로 작성</h4>
+                    <div class="code-block p-4 mb-4">
+# 시작과 끝이 명확한 경우
+for i in range(1, 6): # 1부터 5까지
+    print(i)</div>
+                    <button data-example-id="compare-for" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-compare-for" class="output-block p-4 mt-4 h-32 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+
+                <!-- WHILE Loop Example -->
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">while문으로 작성</h4>
+                    <div class="code-block p-4 mb-4">
+# 조건이 참인 동안 반복
+i = 1
+while i <= 5:
+    print(i)
+    i += 1 # 반복 조건 변화</div>
+                    <button data-example-id="compare-while" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-compare-while" class="output-block p-4 mt-4 h-32 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Section: Control Flow -->
+        <section id="control-flow-section" class="mb-16 scroll-mt-20">
+            <h2 class="text-4xl font-bold text-center mb-12 text-[#6D4C41] section-header pb-4">반복 제어: break와 continue</h2>
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <p class="text-lg text-gray-600 mb-6">
+                    반복문 내부에서 실행 흐름을 제어하는 두 가지 주요 명령어가 있습니다.
+                </p>
+
+                <div class="mb-8 p-4 border rounded-lg bg-gray-50">
+                    <h4 class="text-2xl font-semibold mb-2 text-[#8D6E63]">1. `break` 명령어: 반복문 즉시 종료</h4>
+                    <p class="text-gray-600 mb-4">
+                        `break`는 **현재 실행 중인 반복문 전체**를 완전히 빠져나가게 합니다. 주로 특정 조건을 만족했을 때 더 이상의 반복이 필요 없을 경우 사용됩니다.
+                    </p>
+                    <div class="code-block p-4 mb-4">
+# i가 3이 되면 반복문 종료
+for i in range(1, 6):
+    if i == 4:
+        print("반복 중지!")
+        break
+    print(f"현재 i: {i}")</div>
+                    <button data-example-id="break-example" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-break-example" class="output-block p-4 mt-4 h-32 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+
+                <div class="p-4 border rounded-lg bg-gray-50">
+                    <h4 class="text-2xl font-semibold mb-2 text-[#8D6E63]">2. `continue` 명령어: 현재 반복 건너뛰기</h4>
+                    <p class="text-gray-600 mb-4">
+                        `continue`는 현재 진행 중인 반복(iteration)의 나머지 코드를 실행하지 않고, **다음 반복으로 바로 넘어갑니다.**
+                    </p>
+                    <div class="code-block p-4 mb-4">
+# i가 3일 때만 출력 건너뛰기
+for i in range(1, 6):
+    if i == 3:
+        print("(3은 건너뜀)")
+        continue
+    print(f"현재 i: {i}")</div>
+                    <button data-example-id="continue-example" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-continue-example" class="output-block p-4 mt-4 h-40 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+                
+                <!-- NEW SECTION ADDED HERE -->
+                <div class="mt-8 p-4 border rounded-lg bg-gray-50">
+                    <h4 class="text-2xl font-semibold mb-2 text-[#8D6E63]">3. `break`와 `continue` 함께 사용 (실전 예제)</h4>
+                    <p class="text-gray-600 mb-4">
+                        하나의 반복문 내에서 `continue`로 특정 항목을 건너뛰고, `break`로 전체 반복을 조기에 종료하는 예시입니다. (던전 탐험 상황)
+                    </p>
+                    <div class="code-block p-4 mb-4">
+monsters = ["슬라임", "고블린", "트랩", "오크", "보스", "드래곤"]
+
+for monster in monsters:
+    if monster == "트랩":
+        print("트랩! 피해만 입고 통과.")
+        continue
+    if monster == "보스":
+        print("보스 등장! 종료.")
+        break
+    print(f"{monster} 전투!")</div>
+                    <button data-example-id="break-continue-combined" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                    <div id="output-break-continue-combined" class="output-block p-4 mt-4 h-48 flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+                </div>
+                <!-- END NEW SECTION -->
+                
+            </div>
+        </section>
+        <!-- End New Section -->
+
+        <section id="exercise-section" class="mb-20 scroll-mt-20">
+            <h3 class="text-3xl font-bold text-center mb-12 text-[#6D4C41] section-header pb-4">직접 해보기: 중첩 `for` 반복문으로 구구단 출력하기</h3>
+            <!-- Existing content -->
+            <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
+                `for` 반복문을 중첩하여 2단부터 9단까지 구구단 전체를 출력하는 코드입니다. 코드를 실행하고 결과를 확인해 보세요.
+            </p>
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <h4 class="text-xl font-semibold mb-4 text-[#8D6E63]">구구단 출력 코드</h4>
+                <div class="code-block p-4 mb-4">
+for i in range(2, 10):  # 2단부터 9단까지 반복 (i는 단)
+    for j in range(1, 10):  # 1부터 9까지 반복 (j는 곱하는 수)
+        # f-string을 사용하여 결과를 깔끔하게 출력합니다.
+        print(f"{i} x {j} = {i * j}")
+    print("----------------") # 단이 끝날 때마다 구분선 출력</div>
+                <button data-example-id="gugudan" class="run-btn bg-[#C0A080] text-white py-2 px-4 rounded-full shadow-md hover:bg-[#A08060] transition-all duration-300">실행하기</button>
+                <div id="output-gugudan" class="output-block p-4 mt-4 h-96 overflow-y-scroll flex items-center justify-center text-gray-500">결과가 여기에 표시됩니다.</div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-20">
+        <div class="container mx-auto px-6 py-4 text-center">
+            <p>&copy; 2025 Python Interactive Learning Guide. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Updated outputs object including new examples
+            const outputs = {
+                'for-list': '제가 좋아하는 과일은 사과입니다.\n제가 좋아하는 과일은 바나나입니다.\n제가 좋아하는 과일은 딸기입니다.',
+                'for-range': '0번째 반복\n1번째 반복\n2번째 반복\n3번째 반복\n4번째 반복',
+                'while-basic': '현재 카운트: 0\n현재 카운트: 1\n현재 카운트: 2',
+                
+                // New outputs for comparison and control flow
+                'compare-for': '1\n2\n3\n4\n5',
+                'compare-while': '1\n2\n3\n4\n5',
+                'break-example': '현재 i: 1\n현재 i: 2\n현재 i: 3\n반복 중지!', // i=4일 때 break이므로 3까지만 출력됨
+                'continue-example': '현재 i: 1\n현재 i: 2\n(3은 건너뜀)\n현재 i: 4\n현재 i: 5', // i=3일 때 continue이므로 '현재 i: 3'은 건너뜀
+                'break-continue-combined': '슬라임 전투!\n고블린 전투!\n트랩! 피해만 입고 통과.\n오크 전투!\n보스 등장! 종료.', // NEW OUTPUT
+                
+                // Gugudan output remains the same
+                'gugudan': 
+                    '2 x 1 = 2\n2 x 2 = 4\n2 x 3 = 6\n2 x 4 = 8\n2 x 5 = 10\n2 x 6 = 12\n2 x 7 = 14\n2 x 8 = 16\n2 x 9 = 18\n----------------\n3 x 1 = 3\n3 x 2 = 6\n3 x 3 = 9\n3 x 4 = 12\n3 x 5 = 15\n3 x 6 = 18\n3 x 7 = 21\n3 x 8 = 24\n3 x 9 = 27\n----------------\n4 x 1 = 4\n4 x 2 = 8\n4 x 3 = 12\n4 x 4 = 16\n4 x 5 = 20\n4 x 6 = 24\n4 x 7 = 28\n4 x 8 = 32\n4 x 9 = 36\n----------------\n5 x 1 = 5\n5 x 2 = 10\n5 x 3 = 15\n5 x 4 = 20\n5 x 5 = 25\n5 x 6 = 30\n5 x 7 = 35\n5 x 8 = 40\n5 x 9 = 45\n----------------\n6 x 1 = 6\n6 x 2 = 12\n6 x 3 = 18\n6 x 4 = 24\n6 x 5 = 30\n6 x 6 = 36\n6 x 7 = 42\n6 x 8 = 48\n6 x 9 = 54\n----------------\n7 x 1 = 7\n7 x 2 = 14\n7 x 3 = 21\n7 x 4 = 28\n7 x 5 = 35\n7 x 6 = 42\n7 x 7 = 49\n7 x 8 = 56\n7 x 9 = 63\n----------------\n8 x 1 = 8\n8 x 2 = 16\n8 x 3 = 24\n8 x 4 = 32\n8 x 5 = 40\n8 x 6 = 48\n8 x 7 = 56\n8 x 8 = 64\n8 x 9 = 72\n----------------\n9 x 1 = 9\n9 x 2 = 18\n9 x 3 = 27\n9 x 4 = 36\n9 x 5 = 45\n9 x 6 = 54\n9 x 7 = 63\n9 x 8 = 72\n9 x 9 = 81\n----------------'
+            };
+
+            const runButtons = document.querySelectorAll('.run-btn');
+            runButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const exampleId = button.dataset.exampleId;
+                    const outputEl = document.getElementById(`output-${exampleId}`);
+                    
+                    if (outputs[exampleId]) {
+                        outputEl.textContent = outputs[exampleId];
+                        outputEl.classList.remove('text-gray-500', 'justify-center');
+                        outputEl.classList.add('justify-start');
+                        outputEl.style.whiteSpace = 'pre-wrap';
+                    } else {
+                        outputEl.textContent = '결과를 찾을 수 없습니다.';
+                        outputEl.classList.add('text-gray-500', 'justify-center');
+                        outputEl.style.whiteSpace = 'normal';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
