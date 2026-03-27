@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solved.dd | 역량 진단 및 사전조사</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore-compat.js"></script>
+    <!-- Excel Export Library (SheetJS) -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Pretendard"', 'sans-serif'] },
+                    colors: { brand: { 50: '#eef2ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca' } }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        body { font-family: 'Pretendard', sans-serif; }
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-white text-slate-800">
+
+    <nav class="max-w-4xl mx-auto px-4 h-16 flex justify-between items-center border-b border-slate-100">
+        <a href="orientation.html" class="flex items-center gap-2 text-slate-400 hover:text-brand-600 transition-colors">
+            <span class="material-icons">arrow_back</span>
+            <span class="text-sm font-bold">오리엔테이션으로 돌아가기</span>
+        </a>
+        <button onclick="toggleAdminModal()" class="text-xs font-bold text-slate-300 hover:text-slate-600 px-3 py-1.5 rounded-full bg-slate-50">관리자</button>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 py-16">
+        <header class="text-center mb-16">
+            <div class="w-16 h-16 bg-brand-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <span class="material-icons text-brand-600 text-3xl">assignment</span>
+            </div>
+            <h1 class="text-3xl font-extrabold text-slate-900 mb-4">Solved.dd 역량 진단 및 사전조사</h1>
+            <p class="text-slate-500 leading-relaxed">성실한 답변은 효율적인 팀 매칭과<br>맞춤형 교육 과정 설계의 핵심 자료가 됩니다.</p>
+        </header>
+
+        <form id="surveyForm" class="space-y-12 bg-slate-50 p-8 md:p-12 rounded-3xl border border-slate-200 shadow-sm">
+            <!-- Section 1 -->
+            <div class="space-y-6">
+                <div class="flex items-center gap-2 text-brand-600 border-b border-brand-100 pb-2">
+                    <span class="material-icons text-[20px]">person_outline</span>
+                    <h4 class="font-bold">1. 기본 정보 및 경험</h4>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">이름</label>
+                        <input required type="text" id="name" class="w-full px-4 py-3 rounded-xl border-slate-200 border outline-none focus:border-brand-600 transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">학번 (5자리)</label>
+                        <input required type="text" id="studentId" class="w-full px-4 py-3 rounded-xl border-slate-200 border outline-none focus:border-brand-600 transition-all" placeholder="예: 10301">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">사용해 본 프로그래밍 언어</label>
+                    <input type="text" id="pastLangs" class="w-full px-4 py-3 rounded-xl border-slate-200 border outline-none focus:border-brand-600 transition-all" placeholder="예: Python, C, Scratch, 없음 등">
+                </div>
+            </div>
+
+            <!-- Section 2 -->
+            <div class="space-y-6">
+                <div class="flex items-center gap-2 text-brand-600 border-b border-brand-100 pb-2">
+                    <span class="material-icons text-[20px]">bar_chart</span>
+                    <h4 class="font-bold">2. 숙련도 및 주력 희망</h4>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-4">현재 코딩 실력 자가진단</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center p-3 bg-white border border-slate-200 rounded-xl cursor-pointer hover:border-brand-600">
+                                <input type="radio" name="level" value="1" checked class="w-4 h-4 text-brand-600"><span class="ml-3 text-sm">입문: 처음 배워봅니다.</span>
+                            </label>
+                            <label class="flex items-center p-3 bg-white border border-slate-200 rounded-xl cursor-pointer hover:border-brand-600">
+                                <input type="radio" name="level" value="2" class="w-4 h-4 text-brand-600"><span class="ml-3 text-sm">기초: 문법은 조금 알아요.</span>
+                            </label>
+                            <label class="flex items-center p-3 bg-white border border-slate-200 rounded-xl cursor-pointer hover:border-brand-600">
+                                <input type="radio" name="level" value="3" class="w-4 h-4 text-brand-600"><span class="ml-3 text-sm">숙련: 간단한 프로젝트가 가능해요.</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-4">배우고 싶은 주력 언어</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center p-3 bg-white border border-slate-200 rounded-xl cursor-pointer hover:border-brand-600">
+                                <input type="radio" name="targetLang" value="Python" checked class="w-4 h-4 text-brand-600"><span class="ml-3 text-sm">Python (분석/AI 중심)</span>
+                            </label>
+                            <label class="flex items-center p-3 bg-white border border-slate-200 rounded-xl cursor-pointer hover:border-brand-600">
+                                <input type="radio" name="targetLang" value="C" class="w-4 h-4 text-brand-600"><span class="ml-3 text-sm">C언어 (알고리즘/시스템)</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3 -->
+            <div class="space-y-6">
+                <div class="flex items-center gap-2 text-brand-600 border-b border-brand-100 pb-2">
+                    <span class="material-icons text-[20px]">lightbulb_outline</span>
+                    <h4 class="font-bold">3. 프로젝트 도전 아이디어</h4>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-indigo-100/50 p-4 rounded-xl text-[11px] leading-relaxed">
+                        <strong class="text-indigo-700 block mb-1">예시 1. 학교 급식 알리미</strong>
+                        데이터를 수집하여 요일별 인기 메뉴를 예측하고 스마트폰 알림을 주는 앱
+                    </div>
+                    <div class="bg-indigo-100/50 p-4 rounded-xl text-[11px] leading-relaxed">
+                        <strong class="text-indigo-700 block mb-1">예시 2. 체육관 예약 시스템</strong>
+                        중복 없는 체육관 점심시간 이용권을 발행하는 효율적인 예약 알고리즘 웹
+                    </div>
+                    <div class="bg-indigo-100/50 p-4 rounded-xl text-[11px] leading-relaxed">
+                        <strong class="text-indigo-700 block mb-1">예시 3. AI 학습 보조 챗봇</strong>
+                        모르는 문제를 사진 찍어 올리면 AI가 개념을 설명해 주는 튜터 서비스
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-3">동아리에서 만들고 싶은 프로그램이나 앱은?</label>
+                    <textarea required id="challengeProject" rows="4" class="w-full px-4 py-3 rounded-xl border-slate-200 border outline-none focus:border-brand-600 transition-all" placeholder="해결하고 싶은 불편함이나 구체적인 아이디어를 자유롭게 적어주세요."></textarea>
+                </div>
+            </div>
+
+            <button type="submit" id="submitBtn" class="w-full bg-slate-900 text-white font-extrabold py-5 rounded-2xl hover:bg-brand-600 transition-all shadow-xl flex justify-center items-center gap-2">
+                <span>진단 완료 및 제출하기</span><span class="material-icons text-[20px]">send</span>
+            </button>
+        </form>
+
+        <div id="successMsg" class="hidden text-center py-20 fade-in">
+            <span class="material-icons text-6xl text-green-500 mb-6">check_circle</span>
+            <h4 class="text-2xl font-bold text-slate-900 mb-2">제출이 완료되었습니다!</h4>
+            <p class="text-slate-500 mb-10">정보 선생님께서 확인 후 팀 구성을 진행하겠습니다.</p>
+            <a href="orientation.html" class="inline-block px-8 py-3 bg-slate-100 rounded-xl font-bold text-slate-600 hover:bg-slate-200 transition-colors">홈으로 돌아가기</a>
+        </div>
+    </main>
+
+    <!-- Admin Modal -->
+    <div id="adminModal" class="fixed inset-0 z-[60] hidden bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-4xl shadow-2xl overflow-hidden fade-in max-h-[90vh] flex flex-col">
+            <div id="adminAuthView" class="p-12 text-center my-auto">
+                <span class="material-icons text-slate-300 text-5xl mb-4">lock</span>
+                <h3 class="text-2xl font-bold text-slate-800 mb-8">관리자 인증</h3>
+                <input type="password" id="adminPass" class="w-full max-w-xs px-4 py-4 rounded-xl border border-slate-200 text-center text-4xl tracking-widest outline-none focus:border-brand-600 mb-8" placeholder="••••">
+                <div class="flex justify-center gap-4">
+                    <button onclick="toggleAdminModal()" class="px-6 py-3 text-slate-400 font-bold">취소</button>
+                    <button onclick="verifyAdmin()" class="bg-slate-900 text-white px-10 py-3 rounded-xl font-bold hover:bg-brand-600 transition-colors">인증</button>
+                </div>
+            </div>
+            <div id="adminDashboardView" class="hidden flex flex-col h-full overflow-hidden">
+                <div class="p-6 border-b flex justify-between items-center bg-slate-50 sticky top-0">
+                    <div class="flex items-center gap-4">
+                        <h3 class="font-bold text-slate-900 text-xl">Solved.dd 응답 대시보드 (<span id="respCount">0</span>)</h3>
+                        <button onclick="exportToExcel()" class="flex items-center gap-1 bg-green-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-green-700 transition-colors shadow-sm">
+                            <span class="material-icons text-[16px]">download</span> Excel 내보내기
+                        </button>
+                    </div>
+                    <button onclick="toggleAdminModal()" class="p-2 hover:bg-slate-200 rounded-full"><span class="material-icons">close</span></button>
+                </div>
+                <div class="flex-grow overflow-y-auto p-6 space-y-4" id="respList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let firebaseConfig;
+        try { firebaseConfig = JSON.parse(__firebase_config); } catch (e) {
+            firebaseConfig = { apiKey: "", authDomain: "", projectId: "", storageBucket: "", messagingSenderId: "", appId: "" };
+        }
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'solved-dd-integrated', ADMIN_PASS = '5508';
+        let responses = [], isAdminAuthenticated = false;
+
+        if (firebaseConfig && firebaseConfig.apiKey) {
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore(), auth = firebase.auth();
+            async function init() {
+                try { 
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await auth.signInWithCustomToken(__initial_auth_token); 
+                    else await auth.signInAnonymously(); 
+                } catch (e) {}
+                db.collection('artifacts').doc(appId).collection('public').doc('data').collection('surveys')
+                  .onSnapshot(snap => { 
+                      responses = snap.docs.map(d => ({id: d.id, ...d.data()}));
+                      if(isAdminAuthenticated) updateDashboard();
+                  });
+            }
+            init();
+            window.db = db;
+        }
+
+        document.getElementById('surveyForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true; btn.innerText = "제출 중...";
+            try {
+                await window.db.collection('artifacts').doc(appId).collection('public').doc('data').collection('surveys').add({
+                    name: document.getElementById('name').value,
+                    studentId: document.getElementById('studentId').value,
+                    pastLangs: document.getElementById('pastLangs').value,
+                    level: document.querySelector('input[name="level"]:checked').value,
+                    targetLang: document.querySelector('input[name="targetLang"]:checked').value,
+                    challengeProject: document.getElementById('challengeProject').value,
+                    submittedAt: new Date().toISOString()
+                });
+                document.getElementById('surveyForm').classList.add('hidden');
+                document.getElementById('successMsg').classList.remove('hidden');
+            } catch (err) { alert("제출 오류 발생"); btn.disabled = false; btn.innerText = "진단 완료 및 제출하기"; }
+        };
+
+        function toggleAdminModal() { document.getElementById('adminModal').classList.toggle('hidden'); }
+        
+        function verifyAdmin() {
+            if(document.getElementById('adminPass').value === ADMIN_PASS) {
+                isAdminAuthenticated = true;
+                document.getElementById('adminAuthView').classList.add('hidden');
+                document.getElementById('adminDashboardView').classList.remove('hidden');
+                updateDashboard();
+            } else { alert("비밀번호 불일치"); }
+        }
+
+        function updateDashboard() {
+            document.getElementById('respCount').innerText = responses.length;
+            document.getElementById('respList').innerHTML = responses.sort((a,b) => new Date(b.submittedAt) - new Date(a.submittedAt)).map(r => `
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="flex justify-between mb-3">
+                        <span class="font-bold text-slate-900">${r.name} (${r.studentId})</span>
+                        <span class="text-[10px] font-bold px-2 py-1 bg-indigo-50 text-indigo-600 rounded">
+                            Lv.${r.level} | ${r.targetLang}
+                        </span>
+                    </div>
+                    <div class="text-xs space-y-1 text-slate-600">
+                        <p><strong>사용해 본 언어:</strong> ${r.pastLangs || '없음'}</p>
+                        <p class="mt-2 p-3 bg-slate-50 rounded-lg italic">"${r.challengeProject}"</p>
+                        <p class="text-[9px] text-slate-400 mt-2">제출시간: ${new Date(r.submittedAt).toLocaleString()}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        /**
+         * Excel 파일 내보내기 함수
+         */
+        function exportToExcel() {
+            if (responses.length === 0) {
+                alert("내보낼 데이터가 없습니다.");
+                return;
+            }
+
+            // 1. 데이터를 엑셀용 객체로 변환 (한글 헤더 설정)
+            const excelData = responses.map(r => ({
+                "이름": r.name,
+                "학번": r.studentId,
+                "사용언어": r.pastLangs || "없음",
+                "숙련도(Lv)": r.level,
+                "희망학습언어": r.targetLang,
+                "도전프로젝트": r.challengeProject,
+                "제출시간": new Date(r.submittedAt).toLocaleString()
+            }));
+
+            // 2. 워크시트 생성
+            const worksheet = XLSX.utils.json_to_sheet(excelData);
+            
+            // 3. 워크북 생성 및 시트 추가
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Solved_dd_Survey");
+
+            // 4. 파일 다운로드
+            const fileName = `Solved_dd_역량진단_${new Date().toISOString().split('T')[0]}.xlsx`;
+            XLSX.writeFile(workbook, fileName);
+        }
+    </script>
+</body>
+</html>
