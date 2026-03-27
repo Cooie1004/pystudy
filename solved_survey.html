@@ -161,7 +161,7 @@
     </div>
 
     <script>
-        // 1. Firebase 설정 (제공된 환경변수 활용)
+        // 1. Firebase 설정
         const firebaseConfig = JSON.parse(__firebase_config);
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'solved-dd-cooie1004'; 
         const ADMIN_PASS = '5508';
@@ -172,19 +172,17 @@
         let currentUser = null;
         let unsubscribeListener = null;
 
-        // 2. 초기화 및 인증 로직 (RULE 3 준수)
         firebase.initializeApp(firebaseConfig);
         db = firebase.firestore();
         auth = firebase.auth();
 
-        // 인증 상태 변경 리스너 (RULE 3 보완)
         auth.onAuthStateChanged((user) => {
             if (user) {
                 currentUser = user;
                 console.log("Authenticated as:", user.uid);
-                listenToData(); // 인증 완료 후 데이터 리스너 시작
+                listenToData(); 
             } else {
-                initAuth(); // 인증되지 않았다면 로그인 시도
+                initAuth(); 
             }
         });
 
@@ -200,21 +198,21 @@
             }
         };
 
-        // 3. 실시간 데이터 리스너 (RULE 1 경로 준수)
+        // 3. 실시간 데이터 리스너
         function listenToData() {
             if (!currentUser) return;
-            
-            // 기존 리스너가 있다면 제거
             if (unsubscribeListener) unsubscribeListener();
 
             const collectionRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('surveys');
             
             unsubscribeListener = collectionRef.onSnapshot((snap) => {
                 responses = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                if (isAdminAuthenticated) updateDashboard();
+                // 관리자 인증이 되어 있고 모달이 열려 있다면 즉시 화면 갱신
+                if (isAdminAuthenticated && !document.getElementById('adminModal').classList.contains('hidden')) {
+                    updateDashboard();
+                }
             }, (err) => {
-                // 권한 오류 발생 시 콘솔에 상세 출력
-                console.error("Firestore Permission or Listener Error:", err.code, err.message);
+                console.error("Firestore Error:", err.code, err.message);
             });
         }
 
@@ -259,8 +257,20 @@
 
         // 5. 관리자 기능 및 대시보드
         function toggleAdminModal() { 
-            document.getElementById('adminModal').classList.toggle('hidden'); 
-            document.getElementById('adminPass').value = '';
+            const modal = document.getElementById('adminModal');
+            modal.classList.toggle('hidden'); 
+            if (!modal.classList.contains('hidden')) {
+                document.getElementById('adminPass').value = '';
+                // 만약 이미 인증된 상태라면 바로 대시보드 업데이트
+                if (isAdminAuthenticated) {
+                    document.getElementById('adminAuthView').classList.add('hidden');
+                    document.getElementById('adminDashboardView').classList.remove('hidden');
+                    updateDashboard();
+                } else {
+                    document.getElementById('adminAuthView').classList.remove('hidden');
+                    document.getElementById('adminDashboardView').classList.add('hidden');
+                }
+            }
         }
 
         function verifyAdmin() {
@@ -269,7 +279,7 @@
                 isAdminAuthenticated = true;
                 document.getElementById('adminAuthView').classList.add('hidden');
                 document.getElementById('adminDashboardView').classList.remove('hidden');
-                updateDashboard();
+                updateDashboard(); // 비밀번호 확인 즉시 렌더링 호출
             } else {
                 alert("비밀번호가 올바르지 않습니다.");
             }
@@ -280,14 +290,14 @@
             const listEl = document.getElementById('respList');
             
             if (responses.length === 0) {
-                listEl.innerHTML = `<div class="text-center py-20 text-slate-400">아직 접수된 응답이 없습니다.</div>`;
+                listEl.innerHTML = `<div class="text-center py-20 text-slate-400 bg-white rounded-2xl">아직 접수된 응답이 없습니다.</div>`;
                 return;
             }
 
             const sorted = [...responses].sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
             
             listEl.innerHTML = sorted.map(r => `
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow fade-in">
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <h5 class="font-bold text-slate-900 text-lg">${r.name || '미입력'}</h5>
@@ -297,7 +307,7 @@
                             <span class="text-[10px] font-bold px-2 py-1 bg-indigo-50 text-indigo-600 rounded-full border border-indigo-100">
                                 Lv.${r.level} | ${r.targetLang}
                             </span>
-                            <span class="text-[9px] text-slate-400">${new Date(r.submittedAt).toLocaleDateString()}</span>
+                            <span class="text-[9px] text-slate-400">${new Date(r.submittedAt).toLocaleString()}</span>
                         </div>
                     </div>
                     <div class="space-y-3">
