@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Huffman Tree Visualizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+        }
+
+        .node-circle {
+            transition: all 0.3s ease;
+        }
+
+        .node-circle:hover {
+            filter: brightness(1.1);
+            transform: scale(1.05);
+            cursor: default;
+        }
+
+        #tree-svg {
+            width: 100%;
+            height: auto;
+            min-height: 500px;
+        }
+
+        .scroll-container::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .scroll-container::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .scroll-container::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-6xl mx-auto space-y-6">
+        <!-- Header & Input -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            <h1 class="text-2xl font-bold text-slate-800 mb-2">허프만 트리 시각화 도구</h1>
+            <p class="text-slate-500 mb-6 text-sm">입력한 문자열의 빈도를 분석하고 최적의 압축 트리를 생성합니다.</p>
+            
+            <div class="flex flex-col md:flex-row gap-4">
+                <input type="text" id="input-text" value="COCONUTMELONMANGO" 
+                       class="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all"
+                       placeholder="분석할 텍스트를 입력하세요...">
+                <button onclick="visualize()" 
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-2 rounded-lg font-semibold transition-colors">
+                    트리 생성하기
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <!-- Sidebar: Analysis -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+                    <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">빈도 및 코드 결과</h2>
+                    <div id="code-list" class="space-y-2 max-h-[400px] overflow-y-auto pr-2 scroll-container">
+                        <!-- Code items injected here -->
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 rounded-2xl p-5 border border-blue-100">
+                    <h3 class="text-blue-800 font-bold text-sm mb-2">알고리즘 정보</h3>
+                    <p class="text-blue-700 text-xs leading-relaxed">
+                        가장 낮은 빈도의 두 노드를 선택해 합치는 과정을 반복하여 생성됩니다. 빈도가 높은 문자는 짧은 경로(비트)를 갖게 됩니다.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Main: Tree View -->
+            <div class="lg:col-span-3 bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col items-center overflow-hidden">
+                <div class="flex justify-between w-full mb-4">
+                    <span class="flex items-center gap-2 text-sm text-slate-500">
+                        <span class="w-3 h-3 rounded-full bg-blue-500"></span> 내부 노드 (합계)
+                        <span class="w-3 h-3 rounded-full bg-emerald-500 ml-2"></span> 리프 노드 (문자)
+                    </span>
+                    <button onclick="downloadSVG()" class="text-xs text-blue-600 hover:underline">SVG 이미지 저장</button>
+                </div>
+                
+                <div id="canvas" class="w-full overflow-auto scroll-container flex justify-center bg-slate-50 rounded-xl border border-slate-100">
+                    <svg id="tree-svg"></svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class HuffmanNode {
+            constructor(char, freq, left = null, right = null) {
+                this.char = char;
+                this.freq = freq;
+                this.left = left;
+                this.right = right;
+                this.code = "";
+                this.x = 0;
+                this.y = 0;
+            }
+        }
+
+        function buildHuffmanTree(text) {
+            const freqs = {};
+            for (let char of text) freqs[char] = (freqs[char] || 0) + 1;
+
+            let nodes = Object.entries(freqs).map(([char, freq]) => new HuffmanNode(char, freq));
+
+            while (nodes.length > 1) {
+                nodes.sort((a, b) => a.freq - b.freq);
+                const left = nodes.shift();
+                const right = nodes.shift();
+                const parent = new HuffmanNode(null, left.freq + right.freq, left, right);
+                nodes.push(parent);
+            }
+            return nodes[0];
+        }
+
+        function assignCodes(node, code = "") {
+            if (!node) return;
+            node.code = code;
+            if (node.char !== null) {
+                huffmanCodes[node.char] = code;
+            }
+            assignCodes(node.left, code + "0");
+            assignCodes(node.right, code + "1");
+        }
+
+        let huffmanCodes = {};
+
+        function visualize() {
+            const text = document.getElementById('input-text').value;
+            if (!text) return;
+
+            huffmanCodes = {};
+            const root = buildHuffmanTree(text);
+            assignCodes(root);
+
+            updateCodeUI(text);
+            renderTree(root);
+        }
+
+        function updateCodeUI(text) {
+            const list = document.getElementById('code-list');
+            list.innerHTML = "";
+            
+            const sortedChars = Object.entries(huffmanCodes).sort((a, b) => b[1].length - a[1].length);
+            
+            sortedChars.forEach(([char, code]) => {
+                const item = document.createElement('div');
+                item.className = "flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100";
+                item.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 flex items-center justify-center bg-white border border-slate-200 rounded-lg font-bold text-slate-700">${char === " " ? '␣' : char}</span>
+                        <span class="text-xs text-slate-400">Code:</span>
+                        <span class="font-mono text-blue-600 font-bold">${code}</span>
+                    </div>
+                    <span class="text-[10px] bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full font-medium">${code.length} bits</span>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function renderTree(root) {
+            const svg = document.getElementById('tree-svg');
+            svg.innerHTML = '';
+            
+            const levels = [];
+            function getLevels(node, depth = 0) {
+                if (!node) return;
+                if (!levels[depth]) levels[depth] = [];
+                levels[depth].push(node);
+                getLevels(node.left, depth + 1);
+                getLevels(node.right, depth + 1);
+            }
+            getLevels(root);
+
+            const nodeRadius = 22;
+            const verticalSpacing = 80;
+            const width = Math.max(800, levels[levels.length - 1].length * 60);
+            const height = levels.length * verticalSpacing + 100;
+            
+            svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+            svg.style.minWidth = width + 'px';
+
+            function positionNodes(node, xStart, xEnd, y) {
+                if (!node) return;
+                const x = (xStart + xEnd) / 2;
+                node.x = x;
+                node.y = y;
+
+                positionNodes(node.left, xStart, x, y + verticalSpacing);
+                positionNodes(node.right, x, xEnd, y + verticalSpacing);
+            }
+
+            positionNodes(root, 0, width, 50);
+
+            function drawLinks(node) {
+                if (!node) return;
+                if (node.left) {
+                    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                    line.setAttribute("x1", node.x);
+                    line.setAttribute("y1", node.y);
+                    line.setAttribute("x2", node.left.x);
+                    line.setAttribute("y2", node.left.y);
+                    line.setAttribute("stroke", "#cbd5e1");
+                    line.setAttribute("stroke-width", "2");
+                    svg.appendChild(line);
+
+                    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    text.setAttribute("x", (node.x + node.left.x) / 2 - 10);
+                    text.setAttribute("y", (node.y + node.left.y) / 2);
+                    text.setAttribute("fill", "#ef4444");
+                    text.setAttribute("font-size", "12");
+                    text.setAttribute("font-weight", "bold");
+                    text.textContent = "0";
+                    svg.appendChild(text);
+
+                    drawLinks(node.left);
+                }
+                if (node.right) {
+                    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                    line.setAttribute("x1", node.x);
+                    line.setAttribute("y1", node.y);
+                    line.setAttribute("x2", node.right.x);
+                    line.setAttribute("y2", node.right.y);
+                    line.setAttribute("stroke", "#cbd5e1");
+                    line.setAttribute("stroke-width", "2");
+                    svg.appendChild(line);
+
+                    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    text.setAttribute("x", (node.x + node.right.x) / 2 + 5);
+                    text.setAttribute("y", (node.y + node.right.y) / 2);
+                    text.setAttribute("fill", "#ef4444");
+                    text.setAttribute("font-size", "12");
+                    text.setAttribute("font-weight", "bold");
+                    text.textContent = "1";
+                    svg.appendChild(text);
+
+                    drawLinks(node.right);
+                }
+            }
+
+            function drawNodes(node) {
+                if (!node) return;
+
+                const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                g.setAttribute("class", "node-circle");
+
+                const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                circle.setAttribute("cx", node.x);
+                circle.setAttribute("cy", node.y);
+                circle.setAttribute("r", nodeRadius);
+                circle.setAttribute("fill", node.char ? "#10b981" : "#3b82f6");
+                circle.setAttribute("stroke", node.char ? "#059669" : "#2563eb");
+                circle.setAttribute("stroke-width", "2");
+                g.appendChild(circle);
+
+                const textFreq = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                textFreq.setAttribute("x", node.x);
+                textFreq.setAttribute("y", node.y + (node.char ? -2 : 5));
+                textFreq.setAttribute("text-anchor", "middle");
+                textFreq.setAttribute("fill", "white");
+                textFreq.setAttribute("font-size", "12");
+                textFreq.setAttribute("font-weight", "bold");
+                textFreq.textContent = node.freq;
+                g.appendChild(textFreq);
+
+                if (node.char) {
+                    const textChar = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    textChar.setAttribute("x", node.x);
+                    textChar.setAttribute("y", node.y + 12);
+                    textChar.setAttribute("text-anchor", "middle");
+                    textChar.setAttribute("fill", "white");
+                    textChar.setAttribute("font-size", "10");
+                    textChar.textContent = node.char === " " ? "SPACE" : node.char;
+                    g.appendChild(textChar);
+                }
+
+                svg.appendChild(g);
+                drawNodes(node.left);
+                drawNodes(node.right);
+            }
+
+            drawLinks(root);
+            drawNodes(root);
+        }
+
+        function downloadSVG() {
+            const svgData = document.getElementById("tree-svg").outerHTML;
+            const svgBlob = new Blob([svgData], {type: "image/svg+xml;charset=utf-8"});
+            const svgUrl = URL.createObjectURL(svgBlob);
+            const downloadLink = document.createElement("a");
+            downloadLink.href = svgUrl;
+            downloadLink.download = "huffman-tree.svg";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        }
+
+        // Initial run
+        window.onload = visualize;
+    </script>
+</body>
+</html>
